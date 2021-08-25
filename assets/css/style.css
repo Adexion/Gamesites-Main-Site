@@ -1,0 +1,187 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
+* {
+    font-family: Poppins, sans-serif;
+}
+
+html, body {
+    padding: 0;
+    margin: 0;
+}
+
+h1 {
+    font-weight: 500;
+    font-style: normal;
+    font-size: 36px;
+    line-height: 38px;
+    padding-bottom: 6px;
+}
+
+div {
+    font-size: 14pt;
+    font-weight: 300;
+    line-height: 21pt;
+}
+
+p {
+    margin: 0 !important;
+}
+
+.checkmark > p{
+    background-image: url('../../assets/images/icons/vshape.png');
+}
+
+.exmark >p {
+    background-image: url('../../assets/images/icons/xshape.png');
+}
+
+.checkmark > p, .exmark > p {
+    text-align: left;
+    padding-left: 30px;
+    background-repeat: no-repeat;
+    background-position: left center;
+    font-size: 12pt;
+    margin-bottom: 15px !important;
+}
+
+.choices {
+    margin: 15px;
+    background-color: #2A2F4E;
+    padding: 80px 50px;
+    width: 100%;
+    border-radius: 5px;
+}
+
+.footer {
+    background: #282828;
+    width: 100%;
+    font-size: 12px;
+    color: white;
+    padding: 3px 15px;
+}
+
+.form-switch {
+    margin: 0 15px;
+}
+
+.form-switch .form-check-input {
+    width: 95px;
+    height: 30px;
+}
+
+.form-check-input:checked {
+    background-color: #2a2f4e;
+    border-color: #2a2f4e;
+}
+
+.inner-padding {
+    padding: 26px;
+}
+
+.logo {
+    display: inline-block;
+    width: 300px;
+    height: 90px;
+    background-repeat: no-repeat;
+
+}
+
+.logo-payment {
+    display: inline-block;
+    background-repeat: no-repeat;
+    height: 100px;
+}
+
+.logo-cloudflare {
+    background-image: url("../../assets/images/partners/cloudflare.png");
+    background-size: 306px;
+    background-position: 0 11px;
+}
+
+.logo-dotpay {
+    background-image: url("../../assets/images/payment/dotpay.png");
+    background-size: 200px;
+}
+
+.logo-hotpay {
+    background-image: url("../../assets/images/payment/hotpay.png");
+    background-size: 200px;
+    background-position: 0 13px;
+}
+
+.logo-ovh {
+    background-image: url("../../assets/images/partners/ovh.png");
+}
+
+.logo-paybaylink {
+    background-image: url("../../assets/images/payment/pbl.png");
+    background-size: 200px;
+    background-position: 0 13px;
+}
+
+.logo-paypal {
+    background-image: url("../../assets/images/payment/paypal.png");
+    background-size: 200px;
+}
+
+.logo-symfony {
+    background-image: url("../../assets/images/partners/symfony.png");
+    background-size: 250px;
+}
+
+.main-text {
+    width: 337px;
+
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 21px;
+    text-align: justify;
+}
+
+.btn-custom {
+    margin: 30px 0;
+    width: 360px;
+    height: 59px;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 36px;
+    border-radius: 15px;
+    padding-top: 10px;
+
+    background: #009AD1;
+}
+
+.title {
+    font-family: Lato, sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 29px;
+
+    display: inline-block;
+    position: absolute;
+    top: 22px;
+    left: 90px;
+}
+
+.text-primary {
+     color: #009AD1 !important;
+ }
+
+.text {
+    margin-left: 25px;
+}
+
+.normal {
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 25px;
+}
+
+.small {
+    font-weight: 300;
+    font-size: 12px;
+    line-height: 18px;
+}
+
