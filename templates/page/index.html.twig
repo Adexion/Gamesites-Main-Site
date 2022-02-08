@@ -1,12 +1,41 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {% include 'component/navabr.html.twig' %}
-    {% include 'component/offer.html.twig' %}
-    {% include 'component/howItWorks.html.twig' %}
-    {% include 'component/partners.html.twig' %}
-    {% include 'component/price.html.twig' %}
-    {% include 'component/individual.html.twig' %}
-    {% include 'component/payments.html.twig' %}
-    {% include 'component/footer.html.twig' %}
+<div class="flex vh-100">
+    <div class="text">
+        <h1>Witaj na GameSites!</h1>
+        <h2>Już niedługo zupełnie nowa odsłona...</h2>
+        <span class="time">Ładowanie ...</span>
+        <script>
+            var countDownDate = new Date("March 1, 2022 18:00:00").getTime();
+
+            var x = setInterval(function() {
+
+                // Get today's date and time
+                var now = new Date().getTime();
+
+                // Find the distance between now and the count down date
+                var distance = countDownDate - now;
+
+                // Time calculations for days, hours, minutes and seconds
+                var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                // Display the result in the element with id="demo"
+                document.querySelector(".time").innerHTML = "<b>" + days + "</b> dni <b>" + hours + "</b> godzin <b>"
+                    + minutes + "</b> minut <b>" + seconds + "</b> sekund ";
+
+                // If the count down is finished, write some text
+                if (distance < 0) {
+                    clearInterval(x);
+                    document.querySelector(".time").innerHTML = "EXPIRED";
+                }
+            }, 1000);
+        </script>
+    </div>
+    <div class="logo">
+    </div>
+</div>
 {% endblock %}

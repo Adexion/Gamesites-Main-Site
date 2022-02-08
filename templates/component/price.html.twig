@@ -3,59 +3,26 @@
         <h1 id="offer" class="text-center mb-4">Ile to kosztuje?</h1>
         <div class="d-flex align-items-center justify-content-center mb-4">
             brutto
-                <div class="form-check form-switch">
-                    <label for="flexSwitchCheckDefault"></label><input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault">
-                </div>
+            <div class="form-check form-switch">
+                <label for="flexSwitchCheckDefault"></label><input class="form-check-input" type="checkbox"
+                                                                   id="flexSwitchCheckDefault">
+            </div>
             netto
         </div>
     </div>
     <div class="container">
         <div class="row">
-            <div class="col-lg-4 col-md-12 d-flex justify-content-center flex-column align-items-center">
-                <div class="choices text-center text-white mt-4">
-                    <h4>1 miesiąc / 30 dni</h4>
-                    <p class="small">Opcja zawiera miesięczny abonament</p>
-                    <div class="checkmark mt-3">
-                        <p>Dowolny wybór szablonu*</p>
-                        <p>Moduły podstawowe</p>
+            {% for price in prices %}
+                <div class="col-lg-4 col-md-12 d-flex justify-content-center flex-column align-items-center">
+                    <div class="choices text-center text-white mt-4">
+                        <h4>{{ price.name }}</h4>
+                        <p class="small">{{ price.shortText }}</p>
+                        {{ price.description | raw }}
+                        <h3 class="price" data-netto="{{ price.netto }}" data-vat="{{ price.vat }}"></h3>
+                        <a class="btn btn-primary btn-custom w-50 m-1" href="{{ path('form', {id: price.id}) }}">Kup teraz</a>
                     </div>
-                    <div class="exmark">
-                        <p>Podstawowa pomoc techniczna</p>
-                        <p>Brak aktualizacji aplikacji</p>
-                    </div>
-                    <h3 class="a30"></h3>
                 </div>
-            </div>
-            <div class="col-lg-4 col-md-12 d-flex justify-content-center flex-column align-items-center">
-                <div class="choices text-center text-white">
-                    <h4>1 rok / 365 dni</h4>
-                    <p class="small">Opcja zawiera roczny abonament</p>
-                    <div class="checkmark mt-3">
-                        <p>Dowolny wybór szablonu*</p>
-                        <p>Zawiera plugin websocket</p>
-                        <p>Wszystkie moduły</p>
-                        <p>Pełne aktualizacje</p>
-                        <p>Zaawansowana pomoc</p>
-                        <p>Szybsze wsparcie</p>
-                    </div>
-                    <h3 class="a120"></h3>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-12 d-flex justify-content-center flex-column align-items-center">
-                <div class="choices text-center text-white mt-4">
-                    <h4>3 miesiące / 90 dni</h4>
-                    <p class="small">Opcja zawiera kwartalny abonament</p>
-                    <div class="checkmark mt-3">
-                        <p>Dowolny wybór szablonu*</p>
-                        <p>Moduły podstawowe</p>
-                        <p>Jedna zbiorcza aktualizacja</p>
-                    </div>
-                    <div class="exmark">
-                        <p>Podstawowa pomoc techniczna</p>
-                    </div>
-                    <h3 class="a80"></h3>
-                </div>
-            </div>
+            {% endfor %}
         </div>
     </div>
 </section>

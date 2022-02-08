@@ -1,27 +1,18 @@
 (() => {
-    let a80 = document.querySelector('.a80');
-    let a30 = document.querySelector('.a30');
-    let a120 = document.querySelector('.a120');
+    const price = document.querySelectorAll('.price');
+    const checkbox = document.getElementById('flexSwitchCheckDefault');
 
-    a80.innerHTML = "100 zł";
-    a30.innerHTML = "40 zł";
-    a120.innerHTML = "150 zł";
+    function setPrice(checked) {
+        price.forEach(el => {
+            const netto = Number(el.getAttribute('data-netto'));
+            const vat = Number(el.getAttribute('data-vat'));
 
-    let check = false;
-    document.getElementById('flexSwitchCheckDefault').onchange = function () {
+            const price = checked ? netto : netto + (netto * vat);
 
-        if (check === true) {
-            a80.innerHTML = "100 PLN";
-            a30.innerHTML = "40 PLN"
-            a120.innerHTML = "150 PLN"
-            check = false;
-
-            return;
-        }
-
-        a80.innerHTML = "80 PLN";
-        a30.innerHTML = "30 PLN"
-        a120.innerHTML = "120 PLN"
-        check = true;
+            el.innerHTML = price.toFixed(2) + ' zł';
+        });
     }
+
+    checkbox.onchange = ev => setPrice(ev.target.checked);
+    setPrice(false);
 })();
