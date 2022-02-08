@@ -16,7 +16,7 @@ class HomeController extends AbstractController
     public function index(PriceRepository $priceRepository): Response
     {
         return $this->render('page/index.html.twig', [
-            'prices' => $priceRepository->findBy([], ['id' => 'ASC'])
+//            'prices' => $priceRepository->findBy([], ['id' => 'ASC'])
         ]);
     }
 }
