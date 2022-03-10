@@ -1,17 +1,31 @@
-<section class="container">
-    <nav class="navbar navbar-expand-lg navbar-light p-2">
-        <a class="navbar-brand position-relative" href="{{ path('index') }}">
-            <img src="{{ asset('images/logo.png') }}" alt="" width="73" height="59">
-            <div class="title">GameSites</div>
-        </a>
+<section class="container nav-container">
+    <nav class="navbar sticky-top navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="{{ asset('images/logo.png') }}" width="109" alt="Gamesites logo">
+            </a>
 
-        <div class="navbar-text">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0"></ul>
+            <div class="collapse navbar-collapse" id="toggler">
+                <ul class="navbar-nav m-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page"
+                           href="{{ path('index') }}">Strona&nbsp;główna</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('index') }}#offer">Oferta</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ path('index') }}#about" tabindex="-1" aria-disabled="true">O&nbsp;nas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ dc }}" tabindex="-1" aria-disabled="true">Regulamin </a>
+                    </li>
+                </ul>
+                <form class="d-flex">
+                    <a class="btn btn-custom" href="{{ dc }}">Zamów&nbsp;<i class="fas fa-arrow-right"></i>
+                    </a>
+                </form>
+            </div>
         </div>
-
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01"
-                aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
     </nav>
 </section>

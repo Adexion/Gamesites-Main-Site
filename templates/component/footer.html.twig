@@ -1,3 +1,26 @@
-<section class="footer">
-    Copyright 2016-{{ 'now' | date('Y') }} GameSites.pl - MNGame. Wszelkie prawa zastrzeżone.
-</section>
+<footer class="text-white position-relative">
+    <div class="position-absolute footer-soft"></div>
+    <div class="position-absolute footer-container d-flex justify-content-around py-5">
+        <div class="col-4 d-flex flex-column justify-content-center align-items-center">
+            <img src="{{ asset('images/logo.png') }}" alt="Gamesites.pl Logo" height="140px" class="mb-5">
+            <p>2021 - {{'now'| date('Y') }} Gamesites&trade;  | Wszelkie prawa zastrzeżone.</p>
+        </div>
+        <div class="col-4 d-flex align-items-center justify-content-around">
+            <div class="d-flex flex-column">
+                <h3>Przydatne linki</h3>
+                <a rel="noreferrer" href="https://github.com/Adexion/GameSitesSellIssue/issues}">Github Issue</a>
+                <a rel="noreferrer" href="{{ dc }}">Discord</a>
+                <br/>
+                <a rel="noreferrer" href="#offer">Oferta</a>
+                <a rel="noreferrer" href="#about">O nas</a>
+            </div>
+            <div>
+                <h3>O firmie</h3>
+                Mateusz Poźniak<br/>
+                Dane firmy:<br/>
+                NIP: 6482807915<br/>
+                REGON: 521007421<br/>
+            </div>
+        </div>
+    </div>
+</footer>
