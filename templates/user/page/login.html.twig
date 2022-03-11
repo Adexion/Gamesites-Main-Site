@@ -1,0 +1,39 @@
+{% extends 'user/base.html.twig' %}
+
+{% block body %}
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="d-flex flex-column justify-content-center align-items-center w-50 container">
+            <div>
+                <p class="login">Login</p>
+                <p class="login-text">Zarządzaj stroną i sklepem w jednym miejscu!</p>
+                <div class="login-gap"></div>
+                {{ form_start(form) }}
+                <label>
+                    Email
+                    {{ form_widget(form._username, {attr: {placeholder: "Np. user@user.pl"}}) }}
+                </label>
+                <label>
+                    Hasło
+                    {{ form_widget(form._password, {attr: {placeholder: "Min. 8 znaków"}}) }}
+                </label>
+
+                {{ form_widget(form._remember_me, {label: 'Zapamiętaj mnie'}) }}
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                {{ form_widget(form.logIn, {label: 'Zaloguj', attr: {class: 'w-100 btn-primary'}}) }}
+                {{ form_end(form) }}
+                <p class="copyright">©2022 GameSites.pl - Wszelkie prawa zastrzeżone.</p>
+            </div>
+            {% if error %}
+                <div class="alert-danger alert w-100">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+            {% endif %}
+        </div>
+
+        <div class="vh-100 w-50 gradient d-flex flex-column justify-content-center align-items-center">
+            <div class="gradient-image"></div>
+            <h1>GameSites</h1>
+            <h2>The true power of gaming...</h2>
+            <br>
+            <h3 class="w-75">Zaloguj się do panelu jednej z najbardziej dopracowanych i szczegółowych aplikacji na rynku. Ułatwiamy wszystko byś ty nie musiał robić!</h3>
+        </div>
+    </div>
+{% endblock %}
