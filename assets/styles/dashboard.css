@@ -16,6 +16,10 @@
     border-right-width: 0.3vw;
 }
 
+main {
+    min-height: calc(100vh - 48px);
+}
+
 body {
     font-size: .875rem;
 }

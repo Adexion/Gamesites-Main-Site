@@ -1,5 +1,6 @@
 parameters:
   ip: "89.171.139.76"
+  mail: "noreply@gamesites.pl"
 
 services:
   _defaults:
