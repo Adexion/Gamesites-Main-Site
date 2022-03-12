@@ -27,9 +27,7 @@ class MailerService
             ->to($user->getEmail())
             ->subject('Potwierdzenie Email - Gamesites.pl')
             ->htmlTemplate("security/email/verification.html.twig")
-            ->context([
-                'user' => $user,
-            ]);
+            ->context(['user' => $user]);
 
         $this->mailer->send($email);
     }
