@@ -5,7 +5,6 @@ security:
         App\Entity\User:
             algorithm: auto
 
-
     providers:
         app_user_provider:
             entity:
@@ -22,14 +21,17 @@ security:
                 login_path: app_login
                 check_path: app_login
                 enable_csrf: true
-        main:
+                default_target_path: app_dashboard
             logout:
-                path: app_logout
-
+                 path: app_logout
+            remember_me:
+                secret:   '%kernel.secret%' # required
+                lifetime: 604800 # 1 week in seconds
 
     access_control:
-#         - { path: ^/user, roles: ROLE_ADMIN }
-         - { path: ^/profile, roles: ROLE_USER }
+         - { path: ^/dashboard, roles: ROLE_USER }
+         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+         - { path: ^/register, roles: IS_AUTHENTICATED_ANONYMOUSLY }
 
 when@test:
     security:

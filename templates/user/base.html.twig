@@ -1,14 +1,30 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
+    <meta name="theme-color" content="#7952b3">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}{{ "Log in to SellSite Admin" }}{% endblock %}</title>
+    <title>Panel klienta | Gamesites.pl</title>
+    {% include 'client/component/meta.html.twig' %}
     {% block stylesheets %}
-        {{ encore_entry_link_tags('securedArea') }}
+        {{ encore_entry_link_tags('dashboard') }}
     {% endblock %}
 </head>
 <body>
-{% block body %}{% endblock %}
+{% include 'user/component/navbar.html.twig' %}
+
+<div class="container-fluid">
+    <div class="row">
+        {% include 'user/component/sidebar.html.twig' %}
+
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            {% block body %}
+            {% endblock %}
+        </main>
+    </div>
+</div>
+
+{% block javascripts %}
+    {{ encore_entry_script_tags('dashboard') }}
+{% endblock %}
 </body>
 </html>

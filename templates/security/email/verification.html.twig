@@ -1,0 +1,23 @@
+{% extends 'security/base.html.twig' %}
+
+{% block body %}
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="d-flex flex-column justify-content-center align-items-center w-50 container">
+            <div>
+                <p>Dzień dobry {{ user.email }}</p><br/>
+                <p>Dziękujemy za założenie konta w naszym serwisie</p><br/>
+                <p>Poniżej znajdziesz link weryfikacyjny dla twojego konta:</p>
+                {% set uri = 'https://www.gamesites.pl/activate/' ~ user.token %}
+                <a href="{{ uri }}">{{ uri }}</a><br/>
+                <p>Dziękujemy!</p>
+                <p>Zespół Gamesites.pl!</p>
+            </div>
+        </div>
+
+        <div class="vh-100 w-50 gradient d-flex flex-column justify-content-center align-items-center">
+            <div class="gradient-image"></div>
+            <h1>GameSites</h1>
+            <h2>The true power of gaming...</h2>
+        </div>
+    </div>
+{% endblock %}
