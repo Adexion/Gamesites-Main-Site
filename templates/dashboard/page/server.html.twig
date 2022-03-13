@@ -1,0 +1,42 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Aktywne aplikacje</h1>
+    </div>
+
+    {% if serverList is empty %}
+        <div class="pt-3 d-flex justify-content-center">
+            <h1 class="h2">
+                Brak zainstalowanych aplikacji dla twojego konta
+            </h1>
+        </div>
+    {% else %}
+        <div class="table-responsive">
+        <table class="table table-striped table-sm">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nazwa</th>
+            <th scope="col">Domena</th>
+            <th scope="col">Opłacono do</th>
+            <th scope="col">Akcje</th>
+        </tr>
+        </thead>
+        <tbody>
+    {% endif %}
+    {% for server in serverList %}
+        <tr>
+            <td>{{ loop.index + 1 }}</td>
+            <td>{{ server.name }}</td>
+            <td>{{ server.domain }}</td>
+            <td>{{ server.expiryDate | date('d.m.Y H:i:s') }}</td>
+            <td>
+                <a href="#" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Lista faktur"><i class="fas fa-file-pdf"></i></a>
+                <a href="#" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Historia zamówień"><i class="fas fa-shopping-basket"></i></a>
+                <a href="#" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Ustawienia"><i class="fas fa-server"></i></a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+{% endblock %}

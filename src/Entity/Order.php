@@ -28,6 +28,11 @@ class Order
      */
     private $expiryDate;
 
+    /**
+     * @ORM\Column(type="boolean", options={"default": false})
+     */
+    private $isActive;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -53,6 +58,18 @@ class Order
     public function setExpiryDate(\DateTimeInterface $expiryDate): self
     {
         $this->expiryDate = $expiryDate;
+
+        return $this;
+    }
+
+    public function getIsActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setIsActive(bool $isActive): self
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }

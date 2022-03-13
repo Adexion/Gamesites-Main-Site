@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Server;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -17,5 +18,15 @@ class ServerRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Server::class);
+    }
+
+    public function getUserApplication(User $user): array
+    {
+        return $this->createQueryBuilder('s')
+            ->join('s.client', 'c')
+            ->where('c.id = :id')
+            ->setParameter(':id', $user->getId())
+            ->getQuery()
+            ->execute();
     }
 }
