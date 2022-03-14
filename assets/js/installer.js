@@ -27,6 +27,7 @@ async function steps() {
     await api('/v1/setup/initialize', token).catch(() => {alert('DUPA');errors = true;}).then(json => interpretativeResponse(json));
     await api('/v1/setup/database', token, errors).catch(() => {alert('DUPA');errors = true;}).then(json => interpretativeResponse(json));
     await api('/v1/setup/install', token, errors).catch(() => {alert('DUPA');errors = true;}).then(json => interpretativeResponse(json));
+    await api('/v1/setup/webpack', token, errors).catch(() => {alert('DUPA');errors = true;}).then(json => interpretativeResponse(json));
     await api('/v1/setup/domain', token, errors).catch(() => {alert('DUPA');errors = true;}).then(json => interpretativeResponse(json));
     await api('/v1/setup/configure', token, errors).catch(() => {alert('DUPA');errors = true;}).then(json => {
         interpretativeResponse(json);
