@@ -34,7 +34,7 @@
             <td>
                 <a href="#" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Lista faktur"><i class="fas fa-file-pdf"></i></a>
                 <a href="#" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Historia zamówień"><i class="fas fa-shopping-basket"></i></a>
-                <a href="#" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Ustawienia"><i class="fas fa-server"></i></a>
+                <a href="{{ path('app_setting', {'coupon': server.coupon}) }}" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Ustawienia"><i class="fas fa-server"></i></a>
             </td>
         </tr>
     {% endfor %}

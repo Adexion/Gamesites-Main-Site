@@ -9,6 +9,7 @@ Encore
     .setPublicPath('/build')
     .addEntry('app', './assets/js/app.js')
     .addEntry('dashboard', './assets/js/dashboard.js')
+    .addEntry('installer', './assets/js/installer.js')
     .addStyleEntry('securedArea', './assets/styles/securedArea.css')
     .splitEntryChunks()
     .enableSingleRuntimeChunk()

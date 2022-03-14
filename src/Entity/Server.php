@@ -45,6 +45,11 @@ class Server
     private $expiryDate;
 
     /**
+     * @ORM\Column(type="boolean", options={"default": false})
+     */
+    private $wasInstallerRun;
+
+    /**
      * @ORM\ManyToOne(targetEntity=ServerHistory::class, inversedBy="server")
      */
     private $history;
@@ -180,5 +185,17 @@ class Server
         }
 
         return $this;
+    }
+
+    public function setWasInstallerRun(?bool $wasInstallerRun): self
+    {
+        $this->wasInstallerRun = $wasInstallerRun;
+
+        return $this;
+    }
+
+    public function getWasInstallerRun(): ?bool
+    {
+        return $this->wasInstallerRun;
     }
 }

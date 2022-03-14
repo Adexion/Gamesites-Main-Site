@@ -71,4 +71,16 @@ class ServerController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
+    /**
+     * @Route("/dashboard/setting/{coupon}", name="app_setting")
+     */
+    public function setting(string $coupon, ServerRepository $repository): Response
+    {
+        $server = $repository->findOneBy(['coupon' => $coupon]);
+
+        return $this->render('dashboard/page/setting.html.twig',[
+            'server' => $server
+        ]);
+    }
 }
