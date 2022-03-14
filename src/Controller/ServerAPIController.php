@@ -129,7 +129,7 @@ class ServerAPIController extends AbstractController
         $server = $serverRepository->findOneBy(['coupon' => $content['token']]);
 
         $logs = new \stdClass();
-        $logs->steps = [];
+        $logs->err = [];
         $dir = join('', array_map(fn($value) => ucfirst(strtolower($value)), explode(' ', $server->getName())));
         foreach ($commandList as $command) {
             $replaced = str_replace(
@@ -140,10 +140,11 @@ class ServerAPIController extends AbstractController
 
             Process::fromShellCommandline($replaced, null, null, null, 3600)
                 ->run(function ($type, $buffer) use ($logs) {
-                    $logs->steps[] = $buffer;
+                    if ($type = 'err')
+                        $logs->err[] = $buffer;
                 });
         }
 
-        return new JsonResponse($response + ['steps' => $logs->steps]);
+        return new JsonResponse($response + ['err' => $logs->err]);
     }
 }
