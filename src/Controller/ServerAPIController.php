@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+set_time_limit(0);
+
+use App\Repository\RemoteRepository;
 use App\Repository\ServerRepository;
 use App\Service\DomainService;
 use Doctrine\DBAL\Exception;
@@ -42,8 +45,8 @@ class ServerAPIController extends AbstractController
         $commandList = [
             "sudo -S mysql DROP DATABASE IF EXIST {{ dir }}",
             "sudo -S mysql CREATE DATABASE {{ dir }}",
-            "sudo -S mysql {{ dir }} \"INSERT INTO user (email, roles, password, googleAuthenticatorSecret) VALUES ('biuro@gamesites.pl', '[\"ROLE_ADMIN\"]', '\$2y\$13\$qGrP.kZHAj0zXXVj5E9ASereKEtXl25ii0ofqJ41jduB2clDKaA9y', NULL);\"",
-            "sudo -S mysql {{ dir }} \"INSERT INTO user (email, roles, password, googleAuthenticatorSecret) VALUES ('{$this->getUser()->getUserIdentifier()}', '[\"ROLE_ADMIN\"]', '{$this->getUser()->getPassword()}', NULL)\"",
+            "sudo -S mysql {{ dir }} -e \"INSERT INTO user (email, roles, password, googleAuthenticatorSecret) VALUES ('biuro@gamesites.pl', '[\"ROLE_ADMIN\"]', '\$2y\$13\$qGrP.kZHAj0zXXVj5E9ASereKEtXl25ii0ofqJ41jduB2clDKaA9y', NULL);\"",
+            "sudo -S mysql {{ dir }} -e \"INSERT INTO user (email, roles, password, googleAuthenticatorSecret) VALUES ('{$this->getUser()->getUserIdentifier()}', '[\"ROLE_ADMIN\"]', '{$this->getUser()->getPassword()}', NULL)\"",
         ];
 
         $response = [
@@ -108,8 +111,8 @@ class ServerAPIController extends AbstractController
         $server = $serverRepository->findOneBy(['coupon' => $content['token']]);
         $dir = join('', array_map(fn($value) => ucfirst(strtolower($value)), explode(' ', $server->getName())));
 
-//        $repository = new RemoteRepository($dir);
-//        $repository->insertConfiguration($server);
+        $repository = new RemoteRepository($dir);
+        $repository->insertConfiguration($server);
 
         sleep(2);
 
