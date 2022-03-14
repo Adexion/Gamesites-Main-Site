@@ -43,8 +43,8 @@ class ServerAPIController extends AbstractController
     public function database(Request $request, ServerRepository $serverRepository): Response
     {
         $commandList = [
-            "sudo -S mysql DROP DATABASE IF EXIST {{ dir }}",
-            "sudo -S mysql CREATE DATABASE {{ dir }}",
+            "sudo -S mysql -e \"DROP DATABASE {{ dir }}\"",
+            "sudo -S mysql -e \"CREATE DATABASE {{ dir }}\"",
             "sudo -S mysql {{ dir }} -e \"INSERT INTO user (email, roles, password, googleAuthenticatorSecret) VALUES ('biuro@gamesites.pl', '[\"ROLE_ADMIN\"]', '\$2y\$13\$qGrP.kZHAj0zXXVj5E9ASereKEtXl25ii0ofqJ41jduB2clDKaA9y', NULL);\"",
             "sudo -S mysql {{ dir }} -e \"INSERT INTO user (email, roles, password, googleAuthenticatorSecret) VALUES ('{$this->getUser()->getUserIdentifier()}', '[\"ROLE_ADMIN\"]', '{$this->getUser()->getPassword()}', NULL)\"",
         ];
