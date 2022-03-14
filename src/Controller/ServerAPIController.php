@@ -125,6 +125,8 @@ class ServerAPIController extends AbstractController
         $content = json_decode($request->getContent(), true);
         $server = $serverRepository->findOneBy(['coupon' => $content['token']]);
 
+        $logs = new \stdClass();
+        $logs->steps = [];
         $dir = join('', array_map(fn($value) => ucfirst(strtolower($value)), explode(' ', $server->getName())));
         foreach ($commandList as $command) {
             $replaced = str_replace(
@@ -134,11 +136,11 @@ class ServerAPIController extends AbstractController
             );
 
             Process::fromShellCommandline($replaced, null, null, null, 3600)
-                ->run(function ($type, $buffer) use (&$response) {
-                    $response['steps'][] = $buffer;
+                ->run(function ($type, $buffer) use ($logs) {
+                    $logs->steps[] = $buffer;
                 });
         }
 
-        return new JsonResponse($response);
+        return new JsonResponse($response + ['steps' => $logs->steps]);
     }
 }
