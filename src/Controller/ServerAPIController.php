@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Repository\RemoteRepository;
 use App\Repository\ServerRepository;
 use App\Service\DomainService;
 use Doctrine\DBAL\Exception;
@@ -22,7 +21,7 @@ class ServerAPIController extends AbstractController
     {
         $commandList = [
             "cd /var/www/ && git clone git@github.com:Adexion/GameSitesSell.git {{ dir }}",
-            'echo "APP_ENV=prod \nDATABASE_URL=\"mysql://symfony:8bb725a4w3K*@127.0.0.1:3306/{{ dir }}?serverVersion=5.7\" \nAPP_SECRET=3bb3538a0b014d635d8380564a84e48b" > /var/www/{{ dir }}/.env'
+            'echo "APP_ENV=prod \nDATABASE_URL=\"mysql://symfony:8bb725a4w3K*@127.0.0.1:3306/{{ dir }}?serverVersion=5.7\" \nAPP_SECRET=3bb3538a0b014d635d8380564a84e48b" > /var/www/{{ dir }}/.env',
         ];
 
         $response = [
@@ -31,6 +30,7 @@ class ServerAPIController extends AbstractController
         ];
 
         sleep(2);
+
         return $this->runner($commandList, $response, $request, $serverRepository);
     }
 
@@ -43,7 +43,7 @@ class ServerAPIController extends AbstractController
             "sudo -S mysql DROP DATABASE IF EXIST {{ dir }}",
             "sudo -S mysql CREATE DATABASE {{ dir }}",
             "sudo -S mysql {{ dir }} \"INSERT INTO user (email, roles, password, googleAuthenticatorSecret) VALUES ('biuro@gamesites.pl', '[\"ROLE_ADMIN\"]', '\$2y\$13\$qGrP.kZHAj0zXXVj5E9ASereKEtXl25ii0ofqJ41jduB2clDKaA9y', NULL);\"",
-            "sudo -S mysql {{ dir }} \"INSERT INTO user (email, roles, password, googleAuthenticatorSecret) VALUES ('{$this->getUser()->getUserIdentifier()}', '[\"ROLE_ADMIN\"]', '{$this->getUser()->getPassword()}', NULL)\""
+            "sudo -S mysql {{ dir }} \"INSERT INTO user (email, roles, password, googleAuthenticatorSecret) VALUES ('{$this->getUser()->getUserIdentifier()}', '[\"ROLE_ADMIN\"]', '{$this->getUser()->getPassword()}', NULL)\"",
         ];
 
         $response = [
@@ -52,6 +52,7 @@ class ServerAPIController extends AbstractController
         ];
 
         sleep(2);
+
         return $this->runner($commandList, $response, $request, $serverRepository);
     }
 
@@ -86,7 +87,7 @@ class ServerAPIController extends AbstractController
         $commandList = [
             "sudo -S cat > /etc/nginx/sites-available/{{ dir }}.conf <<EOF{{ string }}EOF",
             "sudo -S ln -s /etc/nginx/sites-available/{{ dir }}.conf /etc/nginx/sites-enabled/{{ dir }}.conf &> /dev/null",
-            "sudo -S certbot --nginx -d {{ domain }} -d www.{{ domain }}  --redirect -n &> /dev/null"
+            "sudo -S certbot --nginx -d {{ domain }} -d www.{{ domain }}  --redirect -n &> /dev/null",
         ];
 
         $response = [
@@ -111,10 +112,11 @@ class ServerAPIController extends AbstractController
 //        $repository->insertConfiguration($server);
 
         sleep(2);
+
         return new JsonResponse([
             'title' => 'Zainstalowano pomyślnie!',
             'percentage' => 100,
-            'style' => 'success'
+            'style' => 'success',
         ]);
     }
 
@@ -125,15 +127,15 @@ class ServerAPIController extends AbstractController
 
         $dir = join('', array_map(fn($value) => ucfirst(strtolower($value)), explode(' ', $server->getName())));
         foreach ($commandList as $command) {
-            $replaced =  str_replace(
+            $replaced = str_replace(
                 ['{{ dir }}', '{{ string }}', '{{ domain }}'],
                 [$dir, DomainService::getFileContent($server->getDomain(), $dir), $server->getDomain()],
                 $command
             );
 
-            Process::fromShellCommandline($replaced, null, null, null,3600)
-                ->run(function($type, $buffer) {
-                    '';
+            Process::fromShellCommandline($replaced, null, null, null, 3600)
+                ->run(function ($type, $buffer) use (&$response) {
+                    $response['steps'][] = $buffer;
                 });
         }
 
