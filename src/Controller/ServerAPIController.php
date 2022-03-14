@@ -78,7 +78,6 @@ class ServerAPIController extends AbstractController
         return $this->runner($commandList, $response, $request, $serverRepository);
     }
 
-
     /**
      * @Route("/v1/setup/webpack", name="app_api_webpack")
      */
