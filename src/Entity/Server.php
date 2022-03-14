@@ -47,7 +47,7 @@ class Server
     /**
      * @ORM\Column(type="boolean", options={"default": false})
      */
-    private $wasInstallerRun;
+    private $wasInstallerRun = false;
 
     /**
      * @ORM\ManyToOne(targetEntity=ServerHistory::class, inversedBy="server")
