@@ -42,13 +42,19 @@ async function api(url, token, errors = false) {
         return {};
     }
 
+    const { timeout = 6000 } = options;
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), timeout);
+
     const response = await fetch(url, {
         method: 'POST',
         body: JSON.stringify({'token': token}),
         headers: {
             'Content-Type': 'application/json',
         },
-    })
+        signal: controller.signal
+    });
+    clearTimeout(id);
 
     return response.json();
 }
