@@ -45,8 +45,6 @@ class ServerAPIController extends AbstractController
         $commandList = [
             "sudo -S mysql -e \"DROP DATABASE {{ dir }}\"",
             "sudo -S mysql -e \"CREATE DATABASE {{ dir }}\"",
-            "sudo -S mysql {{ dir }} -e \"INSERT INTO user (email, roles, password, googleAuthenticatorSecret) VALUES ('biuro@gamesites.pl', '[\"ROLE_ADMIN\"]', '\$2y\$13\$qGrP.kZHAj0zXXVj5E9ASereKEtXl25ii0ofqJ41jduB2clDKaA9y', NULL);\"",
-            "sudo -S mysql {{ dir }} -e \"INSERT INTO user (email, roles, password, googleAuthenticatorSecret) VALUES ('{$this->getUser()->getUserIdentifier()}', '[\"ROLE_ADMIN\"]', '{$this->getUser()->getPassword()}', NULL)\"",
         ];
 
         $response = [
@@ -68,6 +66,8 @@ class ServerAPIController extends AbstractController
             "cd /var/www/{{ dir }} && sudo -S composer install",
             "cd /var/www/{{ dir }} && sudo -S composer dump-autoload --no-dev --classmap-authoritative",
             "cd /var/www/{{ dir }} && php bin/console doctrine:schema:update --force",
+            "sudo -S mysql {{ dir }} -e \"INSERT INTO user (email, roles, password, googleAuthenticatorSecret) VALUES ('biuro@gamesites.pl', '[\"ROLE_ADMIN\"]', '\$2y\$13\$qGrP.kZHAj0zXXVj5E9ASereKEtXl25ii0ofqJ41jduB2clDKaA9y', NULL);\"",
+            "sudo -S mysql {{ dir }} -e \"INSERT INTO user (email, roles, password, googleAuthenticatorSecret) VALUES ('{$this->getUser()->getUserIdentifier()}', '[\"ROLE_ADMIN\"]', '{$this->getUser()->getPassword()}', NULL)\"",
             "cd /var/www/{{ dir }} && chmod 777 var -R",
             "cd /var/www/{{ dir }} && chmod 777 public/assets -R",
             "cd /var/www/{{ dir }} && sudo -S yarn install",
