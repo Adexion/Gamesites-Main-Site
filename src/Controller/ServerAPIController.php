@@ -140,7 +140,7 @@ class ServerAPIController extends AbstractController
 
             Process::fromShellCommandline($replaced, null, null, null, 3600)
                 ->run(function ($type, $buffer) use ($logs) {
-                    if ($type = 'err')
+                    if ($type == 'err')
                         $logs->err[] = $buffer;
                 });
         }
