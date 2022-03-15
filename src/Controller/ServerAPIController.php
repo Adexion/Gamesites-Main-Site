@@ -59,16 +59,22 @@ class ServerAPIController extends AbstractController
 
     /**
      * @Route("/v1/setup/install", name="app_api_install")
+     * @throws Exception
      */
     public function install(Request $request, ServerRepository $serverRepository): Response
     {
         $commandList = [
             "cd /var/www/{{ dir }} && sudo -S composer install",
             "cd /var/www/{{ dir }} && sudo -S composer dump-autoload --no-dev --classmap-authoritative",
-            "cd /var/www/{{ dir }} && php bin/console doctrine:schema:update --force",
-            "sudo -S mysql {{ dir }} -e \"INSERT INTO user (email, roles, password, googleAuthenticatorSecret) VALUES ('biuro@gamesites.pl', '[\"ROLE_ADMIN\"]', '\$2y\$13\$qGrP.kZHAj0zXXVj5E9ASereKEtXl25ii0ofqJ41jduB2clDKaA9y', NULL);\"",
-            "sudo -S mysql {{ dir }} -e \"INSERT INTO user (email, roles, password, googleAuthenticatorSecret) VALUES ('{$this->getUser()->getUserIdentifier()}', '[\"ROLE_ADMIN\"]', '{$this->getUser()->getPassword()}', NULL)\"",
+            "cd /var/www/{{ dir }} && sudo -S bin/console doctrine:schema:update --force"
         ];
+
+        $content = json_decode($request->getContent(), true);
+        $server = $serverRepository->findOneBy(['coupon' => $content['token']]);
+        $dir = join('', array_map(fn($value) => ucfirst(strtolower($value)), explode(' ', $server->getName())));
+
+        $repository = new RemoteRepository($dir);
+        $repository->insertUsers($this->getUser());
 
         $response = [
             'title' => 'Budowanie pakietów webowych ...',
