@@ -92,8 +92,8 @@ class ServerAPIController extends AbstractController
     public function webpack(Request $request, ServerRepository $serverRepository): Response
     {
         $commandList = [
-            "cd /var/www/{{ dir }} && chmod 777 var -R",
-            "cd /var/www/{{ dir }} && chmod 777 public/assets -R",
+            "cd /var/www/{{ dir }} && sudo -S chmod 777 var -R",
+            "cd /var/www/{{ dir }} && sudo -S chmod 777 public/assets -R",
             "cd /var/www/{{ dir }} && sudo -S yarn install",
             "cd /var/www/{{ dir }} && sudo -S yarn build",
         ];
