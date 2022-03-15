@@ -41,7 +41,7 @@ class ServerAPIController extends AbstractController
 
         sleep(2);
 
-        $server->setInstalationFinish(true);
+        $server->setWasInstallerRun(true);
         $manager->persist($server);
         $manager->flush();
 
