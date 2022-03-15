@@ -30,7 +30,7 @@ class RemoteRepository
             'server_name' => $server->getName(),
             'ip' => $server->getDomain(),
             'template' => 'client',
-            'logo' => null
+            'logo' => 'minecraft.png'
         ]);
     }
 
