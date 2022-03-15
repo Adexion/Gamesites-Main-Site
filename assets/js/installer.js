@@ -1,7 +1,6 @@
 global.token = document.getElementById('tokenInstaller').innerHTML;
 global.instalationError = false;
 global.instalationErrorCode = '';
-global.instalationErrorMessage = '';
 
 //All steps in installation progress.
 const stepsList = [
@@ -62,7 +61,6 @@ async function makeApiCall(url) {
         if (checkErrorIfExist(response)) {
             global.instalationError = true;
             global.instalationErrorCode = response.status;
-            global.instalationErrorMessage = response.statusText;
             displayError();
 
             return;
@@ -76,7 +74,6 @@ function displayError() {
     document.getElementById('installer').classList.add('d-none');
     document.getElementById('installerError').classList.remove('d-none');
     document.getElementById('errorCode').innerHTML = global.instalationErrorCode;
-    document.getElementById('errorMessage').innerHTML = global.instalationErrorMessage;
 }
 
 function api(url, token, errors = false) {
