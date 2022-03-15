@@ -8,7 +8,7 @@ use App\Repository\RemoteRepository;
 use App\Repository\ServerRepository;
 use App\Service\DomainService;
 use Doctrine\DBAL\Exception;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\ORMException;
 use stdClass;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,7 +24,7 @@ class ServerAPIController extends AbstractController
      * @Route("/v1/setup/initialize", name="app_api_initial")
      * @throws ORMException
      */
-    public function initialize(Request $request, ServerRepository $serverRepository, EntityManager $manager): Response
+    public function initialize(Request $request, ServerRepository $serverRepository, EntityManagerInterface $manager): Response
     {
         $content = json_decode($request->getContent(), true);
         $server = $serverRepository->findOneBy(['coupon' => $content['token']]);
@@ -141,7 +141,7 @@ class ServerAPIController extends AbstractController
      * @Route("/v1/setup/configure", name="app_api_configure")
      * @throws ORMException|Exception
      */
-    public function configure(Request $request, ServerRepository $serverRepository, EntityManager $manager): Response
+    public function configure(Request $request, ServerRepository $serverRepository, EntityManagerInterface $manager): Response
     {
         $content = json_decode($request->getContent(), true);
         $server = $serverRepository->findOneBy(['coupon' => $content['token']]);
