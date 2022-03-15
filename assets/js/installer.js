@@ -59,7 +59,8 @@ async function makeApiCall(url) {
 
             return;
         }
-        interpretativeResponse(response)
+
+        response.json().then((r) => interpretativeResponse(r))
     });
 }
 
