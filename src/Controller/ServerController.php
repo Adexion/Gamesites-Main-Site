@@ -61,7 +61,7 @@ class ServerController extends AbstractController
                 $manager->persist($server);
                 $manager->flush();
 
-                return $this->redirectToRoute('app_dashboard');
+                return $this->redirectToRoute('app_server');
             }
 
             $form->get('name')->addError(new FormError('Podaj prawidłową nazwę serwera.'));

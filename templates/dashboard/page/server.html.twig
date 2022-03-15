@@ -28,7 +28,7 @@
     {% endif %}
     {% for server in serverList %}
         <tr>
-            <td>{{ loop.index + 1 }}</td>
+            <td>{{ loop.index }}</td>
             <td>{{ server.name }}</td>
             <td>{{ server.domain }}</td>
             <td>{{ server.expiryDate | date('d.m.Y H:i:s') }}</td>
