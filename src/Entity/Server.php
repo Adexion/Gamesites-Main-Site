@@ -59,6 +59,11 @@ class Server
      */
     private $invoice;
 
+    /**
+     * @ORM\Column(type="boolean", options={"default": false})
+     */
+    private $instalationFinish = false;
+
     public function __construct()
     {
         $this->client = new ArrayCollection();
@@ -197,5 +202,17 @@ class Server
     public function getWasInstallerRun(): ?bool
     {
         return $this->wasInstallerRun;
+    }
+
+    public function getInstalationFinish(): ?bool
+    {
+        return $this->instalationFinish;
+    }
+
+    public function setInstalationFinish(bool $instalationFinish): self
+    {
+        $this->instalationFinish = $instalationFinish;
+
+        return $this;
     }
 }
