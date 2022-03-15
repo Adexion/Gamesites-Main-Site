@@ -17,7 +17,15 @@ document.getElementById('runInstaller').addEventListener('click', () => {
     document.getElementById('installer').classList.toggle('d-none');
     document.getElementById('btnInstaller').classList.toggle('d-none');
 
-    startInstallApp().then(() => {});
+    startInstallApp().then(() => {
+        document.getElementById('progressInstaller').classList.add('bg-success');
+        document.getElementById('progressInstaller').classList.remove(' progress-bar-striped');
+        document.getElementById('progressInstaller').classList.remove(' progress-bar-animated');
+
+        setTimeout(() => {
+            window.location.href = '/dashboard/application'
+        }, 5000);
+    });
 });
 
 function setPercentage(percent) {

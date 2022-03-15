@@ -8,6 +8,9 @@ use App\Repository\RemoteRepository;
 use App\Repository\ServerRepository;
 use App\Service\DomainService;
 use Doctrine\DBAL\Exception;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\ORMException;
+use stdClass;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,9 +22,13 @@ class ServerAPIController extends AbstractController
 {
     /**
      * @Route("/v1/setup/initialize", name="app_api_initial")
+     * @throws ORMException
      */
-    public function initialize(Request $request, ServerRepository $serverRepository): Response
+    public function initialize(Request $request, ServerRepository $serverRepository, EntityManager $manager): Response
     {
+        $content = json_decode($request->getContent(), true);
+        $server = $serverRepository->findOneBy(['coupon' => $content['token']]);
+
         $commandList = [
             "cd /var/www/ && git clone git@github.com:Adexion/GameSitesSell.git {{ dir }}",
             'echo "APP_ENV=prod \nDATABASE_URL=\"mysql://symfony:8bb725a4w3K*@127.0.0.1:3306/{{ dir }}?serverVersion=5.7\" \nAPP_SECRET=3bb3538a0b014d635d8380564a84e48b" > /var/www/{{ dir }}/.env',
@@ -33,6 +40,10 @@ class ServerAPIController extends AbstractController
         ];
 
         sleep(2);
+
+        $server->setInstalationFinish(true);
+        $manager->persist($server);
+        $manager->flush();
 
         return $this->runner($commandList, $response, $request, $serverRepository);
     }
@@ -66,7 +77,7 @@ class ServerAPIController extends AbstractController
         $commandList = [
             "cd /var/www/{{ dir }} && sudo -S composer install",
             "cd /var/www/{{ dir }} && sudo -S composer dump-autoload --no-dev --classmap-authoritative",
-            "cd /var/www/{{ dir }} && sudo -S bin/console doctrine:schema:update --force"
+            "cd /var/www/{{ dir }} && sudo -S bin/console doctrine:schema:update --force",
         ];
 
         $content = json_decode($request->getContent(), true);
@@ -128,9 +139,9 @@ class ServerAPIController extends AbstractController
 
     /**
      * @Route("/v1/setup/configure", name="app_api_configure")
-     * @throws Exception
+     * @throws ORMException|Exception
      */
-    public function configure(Request $request, ServerRepository $serverRepository): Response
+    public function configure(Request $request, ServerRepository $serverRepository, EntityManager $manager): Response
     {
         $content = json_decode($request->getContent(), true);
         $server = $serverRepository->findOneBy(['coupon' => $content['token']]);
@@ -140,6 +151,10 @@ class ServerAPIController extends AbstractController
         $repository->insertConfiguration($server);
 
         sleep(2);
+
+        $server->setInstalationFinish(true);
+        $manager->persist($server);
+        $manager->flush();
 
         return new JsonResponse([
             'title' => 'Zainstalowano pomyślnie!',
@@ -153,7 +168,7 @@ class ServerAPIController extends AbstractController
         $content = json_decode($request->getContent(), true);
         $server = $serverRepository->findOneBy(['coupon' => $content['token']]);
 
-        $logs = new \stdClass();
+        $logs = new stdClass();
         $logs->err = [];
         $dir = join('', array_map(fn($value) => ucfirst(strtolower($value)), explode(' ', $server->getName())));
         foreach ($commandList as $command) {
@@ -165,8 +180,9 @@ class ServerAPIController extends AbstractController
 
             Process::fromShellCommandline($replaced, null, null, null, 3600)
                 ->run(function ($type, $buffer) use ($logs) {
-                    if ($type == 'err')
+                    if ($type == 'err') {
                         $logs->err[] = $buffer;
+                    }
                 });
         }
 
