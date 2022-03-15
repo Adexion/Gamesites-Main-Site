@@ -73,15 +73,17 @@ class ServerAPIController extends AbstractController
         $server = $serverRepository->findOneBy(['coupon' => $content['token']]);
         $dir = join('', array_map(fn($value) => ucfirst(strtolower($value)), explode(' ', $server->getName())));
 
-        $repository = new RemoteRepository($dir);
-        $repository->insertUsers($this->getUser());
-
         $response = [
             'title' => 'Budowanie pakietów webowych ...',
             'percentage' => 50,
         ];
 
-        return $this->runner($commandList, $response, $request, $serverRepository);
+        $response = $this->runner($commandList, $response, $request, $serverRepository);
+
+        $repository = new RemoteRepository($dir);
+        $repository->insertUsers($this->getUser());
+
+        return $response;
     }
 
     /**
