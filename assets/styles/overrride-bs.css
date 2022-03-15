@@ -1,0 +1,19 @@
+.btn-danger {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+}
+
+.btn-danger:active, .btn-danger:hover, .btn-danger:focus {
+    background-color: var(--sidebar-bg);
+    border-color: var(--sidebar-bg);
+}
+
+.btn-danger:focus, .btn-danger:active:focus {
+    box-shadow: 0 0 0 0.25rem var(--focus-primary);
+}
+
+:root {
+    --color-primary: #661158;
+    --active-primary: #49093f;
+    --focus-primary: rgba(73, 9, 63, 0.5);
+}

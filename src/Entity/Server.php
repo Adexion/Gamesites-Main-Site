@@ -103,6 +103,11 @@ class Server
         return $this;
     }
 
+    public function getDir(): ?string
+    {
+        return lcfirst(join('', array_map(fn($value) => ucfirst(strtolower($value)), explode(' ', $this->getName()))));
+    }
+
     public function getDomain(): ?string
     {
         return $this->domain;

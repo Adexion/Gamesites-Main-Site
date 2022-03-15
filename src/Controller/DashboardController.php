@@ -19,7 +19,7 @@ class DashboardController extends AbstractController
     }
 
     /**
-     * @Route("/dashboard/application", name="app_server")
+     * @Route("/dashboard/application", name="app_server_list")
      */
     public function server(ServerRepository $repository): Response
     {

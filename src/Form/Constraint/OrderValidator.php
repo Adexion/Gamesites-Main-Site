@@ -25,7 +25,7 @@ class OrderValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, Order::class);
         }
 
-        $order = $this->serverRepository->findBy(['coupon' => $value]) ?: $this->orderRepository->findOneBy(['coupon' => $value, 'isActive' => true]);
+        $order = $this->serverRepository->findOneBy(['coupon' => $value]) ?: $this->orderRepository->findOneBy(['coupon' => $value, 'isActive' => true]);
         if (!$order || $order->getExpiryDate()->format('YmdHis') < date('YmdHis')) {
             $this->context->buildViolation($constraint->message)
                 ->addViolation();

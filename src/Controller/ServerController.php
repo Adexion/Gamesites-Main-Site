@@ -61,7 +61,7 @@ class ServerController extends AbstractController
                 $manager->persist($server);
                 $manager->flush();
 
-                return $this->redirectToRoute('app_server');
+                return $this->redirectToRoute('app_server_list');
             }
 
             $form->get('name')->addError(new FormError('Podaj prawidłową nazwę serwera.'));
@@ -85,7 +85,7 @@ class ServerController extends AbstractController
             ]);
         }
 
-        return $this->render('dashboard/page/settings.html.twig', [
+        return $this->render('dashboard/page/server/settings.html.twig', [
             'server' => $server
         ]);
     }
@@ -95,10 +95,12 @@ class ServerController extends AbstractController
      */
     public function install(string $coupon, ServerRepository $repository): Response
     {
-        $template = 'dashboard/page/installation.html.twig';
         $server = $repository->findOneBy(['coupon' => $coupon]);
+        if ($server->getWasInstallerRun() || $server->getInstalationFinish()) {
+            $this->redirectToRoute('app_server_list');
+        }
 
-        return $this->render($template, [
+        return $this->render('dashboard/page/server/installation.html.twig', [
             'server' => $server
         ]);
     }

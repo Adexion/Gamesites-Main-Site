@@ -82,7 +82,6 @@ class ServerAPIController extends AbstractController
 
         $content = json_decode($request->getContent(), true);
         $server = $serverRepository->findOneBy(['coupon' => $content['token']]);
-        $dir = join('', array_map(fn($value) => ucfirst(strtolower($value)), explode(' ', $server->getName())));
 
         $response = [
             'title' => 'Budowanie pakietów webowych (To może chwilę potrwać) ...',
@@ -91,7 +90,7 @@ class ServerAPIController extends AbstractController
 
         $response = $this->runner($commandList, $response, $request, $serverRepository);
 
-        $repository = new RemoteRepository($dir);
+        $repository = new RemoteRepository($server->getDir());
         $repository->insertUsers($this->getUser());
 
         return $response;
@@ -130,7 +129,7 @@ class ServerAPIController extends AbstractController
         ];
 
         $response = [
-            'title' => 'Pre-konfiguracja aplikacji ...',
+            'title' => 'Pre-konfigurowanie aplikacji ...',
             'percentage' => 95,
         ];
 
@@ -145,9 +144,8 @@ class ServerAPIController extends AbstractController
     {
         $content = json_decode($request->getContent(), true);
         $server = $serverRepository->findOneBy(['coupon' => $content['token']]);
-        $dir = join('', array_map(fn($value) => ucfirst(strtolower($value)), explode(' ', $server->getName())));
 
-        $repository = new RemoteRepository($dir);
+        $repository = new RemoteRepository($server->getDir());
         $repository->insertConfiguration($server);
 
         sleep(2);
@@ -170,11 +168,10 @@ class ServerAPIController extends AbstractController
 
         $logs = new stdClass();
         $logs->err = [];
-        $dir = join('', array_map(fn($value) => ucfirst(strtolower($value)), explode(' ', $server->getName())));
         foreach ($commandList as $command) {
             $replaced = str_replace(
                 ['{{ dir }}', '{{ string }}', '{{ domain }}'],
-                [$dir, DomainService::getFileContent($server->getDomain(), $dir), $server->getDomain()],
+                [$server->getDir(), DomainService::getFileContent($server->getDomain(), $server->getDir()), $server->getDomain()],
                 $command
             );
 

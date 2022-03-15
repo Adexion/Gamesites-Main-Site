@@ -1,0 +1,29 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="d-flex flex-row justify-content-between align-items-center">
+            <h1>{{ server.name | capitalize }}</h1>
+            <button class="btn-danger btn">Zresetuj aplikacje&nbsp;<i class="fas fa-power-off"></i></button>
+        </div>
+
+        <div class="mt-5 row mx-0">
+            <div class="col-12 col-lg-9">
+
+            </div>
+            <div class="col-12 col-lg-3 border-color">
+                <span class="h4">Resetowanie hasła</span>
+                <form method="post" action="#" class="mt-4">
+                    <div class="mb-3">
+                        <label for="first_option">Hasło</label>
+                        <input id="first_option" type="password" name="first_option" class="form-control"/>
+                    </div>
+                    <div class="mb-3">
+                        <label for="second_option">Powtórz hasło</label>
+                        <input id="second_option" type="password" name="second_option" class="form-control"/>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
