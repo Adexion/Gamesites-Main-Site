@@ -1,10 +1,23 @@
-const token = document.getElementById('tokenInstaller').innerHTML;
+global.token = document.getElementById('tokenInstaller').innerHTML;
+global.instalationError = false;
+global.instalationErrorCode = '';
+global.instalationErrorMessage = '';
+
+//All steps in installation progress.
+const stepsList = [
+    '/v1/setup/initialize',
+    '/v1/setup/database',
+    '/v1/setup/install',
+    '/v1/setup/webpack',
+    '/v1/setup/domain',
+    '/v1/setup/configure'
+];
 
 document.getElementById('runInstaller').addEventListener('click', () => {
     document.getElementById('installer').classList.toggle('d-none');
     document.getElementById('btnInstaller').classList.toggle('d-none');
 
-    steps().then(() => {});
+    startInstallApp().then(() => {});
 });
 
 function setPercentage(percent) {
@@ -17,38 +30,56 @@ function setPercentage(percent) {
 }
 
 function interpretativeResponse(json) {
-    console.log(json);
+    if (json === undefined) return;
     document.getElementById('titleInstaller').innerHTML = json.title;
     setPercentage(json.percentage);
 }
 
-async function steps() {
+async function startInstallApp() {
+    for (const url of stepsList) {
+        await makeApiCall(url);
+    }
+}
 
-    let errors = false;
-    await api('/v1/setup/initialize', token).catch(() => {alert('DUPA');errors = true;}).then(json => interpretativeResponse(json));
-    await api('/v1/setup/database', token, errors).catch(() => {alert('DUPA');errors = true;}).then(json => interpretativeResponse(json));
-    await api('/v1/setup/install', token, errors).catch(() => {alert('DUPA');errors = true;}).then(json => interpretativeResponse(json));
-    await api('/v1/setup/webpack', token, errors).catch(() => {alert('DUPA');errors = true;}).then(json => interpretativeResponse(json));
-    await api('/v1/setup/domain', token, errors).catch(() => {alert('DUPA');errors = true;}).then(json => interpretativeResponse(json));
-    await api('/v1/setup/configure', token, errors).catch(() => {alert('DUPA');errors = true;}).then(json => {
-        interpretativeResponse(json);
+function checkErrorIfExist(error) {
+    return error.status !== 200 || error.ok !== true;
+}
 
-        if (json.style === 'success') {
-            document.getElementById('progressInstaller').classList.add('bg-success');
+async function makeApiCall(url) {
+    if (global.instalationError) {
+        return;
+    }
+
+    await api(url, global.token).then(response => {
+        if (checkErrorIfExist(response)) {
+            global.instalationError = true;
+            global.instalationErrorCode = response.status;
+            global.instalationErrorMessage = response.statusText;
+            displayError();
+
+            return;
         }
+        interpretativeResponse(response)
     });
 }
 
-async function api(url, token, errors = false) {
+function displayError() {
+    document.getElementById('installer').classList.add('d-none');
+    document.getElementById('installerError').classList.remove('d-none');
+    document.getElementById('errorCode').innerHTML = global.instalationErrorCode;
+    document.getElementById('errorMessage').innerHTML = global.instalationErrorMessage;
+}
+
+function api(url, token, errors = false) {
     if (errors) {
-        return {};
+        return {
+            'title': "Error!!!"
+        };
     }
 
-    const { timeout = 6000 } = options;
     const controller = new AbortController();
-    const id = setTimeout(() => controller.abort(), timeout);
 
-    const response = await fetch(url, {
+    return fetch(url, {
         method: 'POST',
         body: JSON.stringify({'token': token}),
         headers: {
@@ -56,9 +87,6 @@ async function api(url, token, errors = false) {
         },
         signal: controller.signal
     });
-    clearTimeout(id);
-
-    return response.json();
 }
 
 
