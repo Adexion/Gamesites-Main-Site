@@ -29,7 +29,8 @@ class RemoteRepository
         $this->con->insert('configuration', [
             'server_name' => $server->getName(),
             'ip' => $server->getDomain(),
-            'template' => 'client'
+            'template' => 'client',
+            'logo' => null
         ]);
     }
 

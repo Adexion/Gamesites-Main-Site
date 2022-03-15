@@ -112,7 +112,7 @@ class ServerAPIController extends AbstractController
     public function domain(Request $request, ServerRepository $serverRepository): Response
     {
         $commandList = [
-            "sudo -S cat > /etc/nginx/sites-available/{{ dir }}.conf <<EOF
+            "sudo -S sudo tee -a /etc/nginx/sites-available/{{ dir }}.conf <<EOF
 {{ string }}
 EOF",
             "sudo -S ln -s /etc/nginx/sites-available/{{ dir }}.conf /etc/nginx/sites-enabled/{{ dir }}.conf &> /dev/null",
