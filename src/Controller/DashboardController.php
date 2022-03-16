@@ -24,7 +24,8 @@ class DashboardController extends AbstractController
     public function server(ServerRepository $repository): Response
     {
         return $this->render('dashboard/page/server.html.twig', [
-            'serverList' => $repository->getUserApplication($this->getUser()),
+            'userServerList' => $repository->getUserApplication($this->getUser()),
+            'workspaceServerList' => $repository->getWorkspaceApplication($this->getUser())
         ]);
     }
 }

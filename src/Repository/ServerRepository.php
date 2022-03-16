@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Server;
 use App\Entity\User;
+use App\Entity\Workspace;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -26,6 +27,15 @@ class ServerRepository extends ServiceEntityRepository
             ->join('s.client', 'c')
             ->where('c.id = :id')
             ->setParameter(':id', $user->getId())
+            ->getQuery()
+            ->execute();
+    }
+
+    public function getWorkspaceApplication(User $user){
+        return $this->createQueryBuilder('s')
+            ->join('s.workspace', 'w')
+            ->where('w.id = :id')
+            ->setParameter(':id', $user->getWorkspace())
             ->getQuery()
             ->execute();
     }

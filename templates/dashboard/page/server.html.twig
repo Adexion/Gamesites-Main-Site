@@ -5,7 +5,7 @@
         <h1 class="h2">Aktywne aplikacje</h1>
     </div>
 
-    {% if serverList is empty %}
+    {% if userServerList is empty %}
         <div class="pt-3 d-flex justify-content-center">
             <h1 class="h2">
                 Brak zainstalowanych aplikacji dla twojego konta
@@ -26,7 +26,7 @@
         </thead>
         <tbody>
     {% endif %}
-    {% for server in serverList %}
+    {% for server in userServerList %}
         <tr>
             <td>{{ loop.index }}</td>
             <td>{{ server.name }}</td>

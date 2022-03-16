@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\User;
 use App\Entity\Workspace;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -19,32 +20,13 @@ class WorkspaceRepository extends ServiceEntityRepository
         parent::__construct($registry, Workspace::class);
     }
 
-    // /**
-    //  * @return Workspace[] Returns an array of Workspace objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function getUserWorkspaces(User $user)
     {
         return $this->createQueryBuilder('w')
-            ->andWhere('w.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('w.id', 'ASC')
-            ->setMaxResults(10)
+            ->join('w.users', 'wu')
+            ->where('wu.id = :uid')
+            ->setParameter(':uid', $user->getId())
             ->getQuery()
-            ->getResult()
-        ;
+            ->execute();
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Workspace
-    {
-        return $this->createQueryBuilder('w')
-            ->andWhere('w.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
