@@ -68,6 +68,11 @@ class Server
      */
     private $instalationFinish = false;
 
+    /**
+     * @ORM\OneToOne(targetEntity=Workspace::class, inversedBy="server", cascade={"persist", "remove"})
+     */
+    private $workspace;
+
     public function __construct()
     {
         $this->client = new ArrayCollection();
@@ -221,6 +226,18 @@ class Server
     public function setInstalationFinish(bool $instalationFinish): self
     {
         $this->instalationFinish = $instalationFinish;
+
+        return $this;
+    }
+
+    public function getWorkspace(): ?Workspace
+    {
+        return $this->workspace;
+    }
+
+    public function setWorkspace(?Workspace $workspace): self
+    {
+        $this->workspace = $workspace;
 
         return $this;
     }

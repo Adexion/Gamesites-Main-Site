@@ -66,10 +66,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $invoice;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Workspace::class, inversedBy="users")
+     */
+    private $workspace;
+
     public function __construct()
     {
         $this->server = new ArrayCollection();
         $this->invoice = new ArrayCollection();
+        $this->workspace = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -222,6 +228,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $invoice->setClient(null);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Workspace[]
+     */
+    public function getWorkspace(): Collection
+    {
+        return $this->workspace;
+    }
+
+    public function addWorkspace(Workspace $workspace): self
+    {
+        if (!$this->workspace->contains($workspace)) {
+            $this->workspace[] = $workspace;
+        }
+
+        return $this;
+    }
+
+    public function removeWorkspace(Workspace $workspace): self
+    {
+        $this->workspace->removeElement($workspace);
 
         return $this;
     }
