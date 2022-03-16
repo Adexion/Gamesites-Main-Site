@@ -7,6 +7,7 @@ use App\Entity\User;
 use App\Entity\Workspace;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpFoundation\Session\Session;
 
 /**
  * @method Server|null find($id, $lockMode = null, $lockVersion = null)
@@ -21,21 +22,14 @@ class ServerRepository extends ServiceEntityRepository
         parent::__construct($registry, Server::class);
     }
 
-    public function getUserApplication(User $user): array
-    {
+    public function getWorkspaceServer(Workspace $workspace, User $user){
         return $this->createQueryBuilder('s')
-            ->join('s.client', 'c')
-            ->where('c.id = :id')
-            ->setParameter(':id', $user->getId())
-            ->getQuery()
-            ->execute();
-    }
-
-    public function getWorkspaceApplication(User $user){
-        return $this->createQueryBuilder('s')
-            ->join('s.workspace', 'w')
+            ->join(Workspace::class, 'w', 's.workspace = w.id')
+            ->join(User::class, 'c', 's.client = c.id')
             ->where('w.id = :id')
-            ->setParameter(':id', $user->getWorkspace())
+            ->orWhere('c.id = :cid')
+            ->setParameter(':id', $workspace->getId())
+            ->setParameter(':cid', $user->getId())
             ->getQuery()
             ->execute();
     }

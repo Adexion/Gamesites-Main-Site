@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Repository\ServerRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -21,11 +22,11 @@ class DashboardController extends AbstractController
     /**
      * @Route("/dashboard/application", name="app_server_list")
      */
-    public function server(ServerRepository $repository): Response
+    public function server(ServerRepository $repository, RequestStack $requestStack): Response
     {
+
         return $this->render('dashboard/page/server.html.twig', [
-            'userServerList' => $repository->getUserApplication($this->getUser()),
-            'workspaceServerList' => $repository->getWorkspaceApplication($this->getUser())
+            'userServerList' =>$repository->getWorkspaceServer($requestStack->getSession()->get('workspace'), $this->getUser()),
         ]);
     }
 }

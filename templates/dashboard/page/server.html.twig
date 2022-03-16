@@ -21,6 +21,7 @@
             <th scope="col">Domena</th>
             <th scope="col">Opłacono do</th>
             <th scope="col">Status</th>
+            <th scope="col">Workspace</th>
             <th scope="col">Akcje</th>
         </tr>
         </thead>
@@ -33,6 +34,8 @@
             <td>{{ server.domain }}</td>
             <td>{{ server.expiryDate | date('d.m.Y H:i:s') }}</td>
             <td>{{ server.instalationFinish ? 'Instalacja zakończona' : 'Aplikacja nie zainstalowana'}}</td>
+            <td>{{ server.workspace ? server.workspace.name : 'Nie przypisana' }}</td>
+
             <td>
                 <a href="#" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Lista faktur"><i class="fas fa-file-pdf"></i></a>
                 <a href="#" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Historia zamówień"><i class="fas fa-shopping-basket"></i></a>

@@ -7,20 +7,34 @@ use App\Form\WorkspaceType;
 use App\Repository\WorkspaceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+
 class WorkspaceController extends AbstractController
 {
+
     /**
      * @Route("/workspace", name="app_workspace_list")
      */
     public function workspaces(WorkspaceRepository $repository): Response
     {
-        return $this->render('dashboard/page/workspace/list.html.twig',[
-            'workspaceList' => $repository->getUserWorkspaces($this->getUser())
+        return $this->render('dashboard/page/workspace/list.html.twig', [
+            'workspaceList' => $repository->getUserWorkspaces($this->getUser()),
         ]);
+    }
+
+    /**
+     * @Route("/workspace/select/{workspace}", name="app_workspace_select")
+     */
+    public function select(string $workspace, WorkspaceRepository $repository, RequestStack $requestStack): RedirectResponse
+    {
+        $workspace = $repository->findOneBy(['name' => $workspace]);
+        $requestStack->getSession()->set('workspace', $workspace);
+        return $this->redirectToRoute('app_workspace_list');
     }
 
     /**

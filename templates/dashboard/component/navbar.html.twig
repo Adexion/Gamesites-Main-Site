@@ -3,7 +3,7 @@
     <div class="d-flex">
         <div class="navbar-nav">
             <div class="nav-item text-nowrap">
-                <a class="nav-link px-3" href="{{ path('app_workspace_list') }}">Obszar roboczy: MnGame</a>
+                <a class="nav-link px-3" href="{{ path('app_workspace_list') }}">Obszar roboczy: {{ workspace ? workspace.name : 'Brak wybranego' }}</a>
             </div>
         </div>
         <div class="navbar-nav">
