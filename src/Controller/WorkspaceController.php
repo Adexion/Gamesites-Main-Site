@@ -42,7 +42,6 @@ class WorkspaceController extends AbstractController
      */
     public function create(Request $request, EntityManagerInterface $manager): Response
     {
-
         $workspace = new Workspace();
         $form = $this->createForm(WorkspaceType::class, $workspace);
         $form->handleRequest($request);
