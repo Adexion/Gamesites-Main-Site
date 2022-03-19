@@ -39,10 +39,10 @@ class Invoice
     private $dueDate;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Server::class, inversedBy="invoice")
+     * @ORM\ManyToOne(targetEntity=Application::class, inversedBy="invoice")
      * @ORM\JoinColumn(nullable=false)
      */
-    private $server;
+    private $application;
 
     public function getId(): ?int
     {
@@ -97,14 +97,14 @@ class Invoice
         return $this;
     }
 
-    public function getServer(): ?Server
+    public function getApplication(): ?Application
     {
-        return $this->server;
+        return $this->application;
     }
 
-    public function setServer(?Server $server): self
+    public function setApplication(?Application $application): self
     {
-        $this->server = $server;
+        $this->application = $application;
 
         return $this;
     }

@@ -3,7 +3,7 @@
 namespace App\Form\Constraint;
 
 use App\Repository\OrderRepository;
-use App\Repository\ServerRepository;
+use App\Repository\ApplicationRepository;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -11,12 +11,12 @@ use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 class OrderValidator extends ConstraintValidator
 {
     private OrderRepository $orderRepository;
-    private ServerRepository $serverRepository;
+    private ApplicationRepository $applicationRepository;
 
-    public function __construct(OrderRepository $orderRepository, ServerRepository $serverRepository)
+    public function __construct(OrderRepository $orderRepository, ApplicationRepository $applicationRepository)
     {
         $this->orderRepository = $orderRepository;
-        $this->serverRepository = $serverRepository;
+        $this->applicationRepository = $applicationRepository;
     }
 
     public function validate($value, Constraint $constraint)
@@ -25,7 +25,7 @@ class OrderValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, Order::class);
         }
 
-        $order = $this->serverRepository->findOneBy(['coupon' => $value]) ?: $this->orderRepository->findOneBy(['coupon' => $value, 'isActive' => true]);
+        $order = $this->applicationRepository->findOneBy(['coupon' => $value]) ?: $this->orderRepository->findOneBy(['coupon' => $value, 'isActive' => true]);
         if (!$order || $order->getExpiryDate()->format('YmdHis') < date('YmdHis')) {
             $this->context->buildViolation($constraint->message)
                 ->addViolation();

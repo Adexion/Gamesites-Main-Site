@@ -1,19 +1,39 @@
 .btn-danger {
+    background-color: var(--color-danger);
+    border-color: var(--color-danger);
+}
+
+.btn-danger:active, .btn-danger:hover, .btn-danger:focus {
+    background-color: var(--active-danger);
+    border-color: var(--active-danger);
+}
+
+.btn-danger:focus, .btn-danger:active:focus {
+    box-shadow: 0 0 0 0.25rem var(--focus-danger);
+}
+
+
+.btn-primary {
     background-color: var(--color-primary);
     border-color: var(--color-primary);
 }
 
-.btn-danger:active, .btn-danger:hover, .btn-danger:focus {
-    background-color: var(--sidebar-bg);
-    border-color: var(--sidebar-bg);
+.btn-primary:active, .btn-primary:hover, .btn-primary:focus {
+    background-color: var(--active-primary);
+    border-color: var(--active-primary);
 }
 
-.btn-danger:focus, .btn-danger:active:focus {
+.btn-primary:focus, .btn-primary:active:focus {
     box-shadow: 0 0 0 0.25rem var(--focus-primary);
 }
 
 :root {
-    --color-primary: #661158;
-    --active-primary: #49093f;
-    --focus-primary: rgba(73, 9, 63, 0.5);
+    --color-danger: #661158;
+    --color-primary: #1a6bab;
+
+    --active-danger: #49093f;
+    --active-primary: #093049;
+
+    --focus-danger: rgba(73, 9, 63, 0.5);
+    --focus-primary: rgba(26, 107, 171, 0.5);
 }

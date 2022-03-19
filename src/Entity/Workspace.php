@@ -6,6 +6,7 @@ use App\Repository\WorkspaceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=WorkspaceRepository::class)
@@ -25,9 +26,9 @@ class Workspace
     private $name;
 
     /**
-     * @ORM\OneToOne(targetEntity=Server::class, mappedBy="workspace", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Application::class, mappedBy="workspace", cascade={"persist", "remove"})
      */
-    private $server;
+    private $application;
 
     /**
      * @ORM\ManyToMany(targetEntity=User::class, mappedBy="workspace")
@@ -57,37 +58,35 @@ class Workspace
     }
 
 
-    public function getServer(): ?Server
+    public function getApplication(): ?Application
     {
-        return $this->server;
+        return $this->application;
     }
 
-    public function setServer(?Server $server): self
+    public function setApplication(?Application $application): self
     {
-        // unset the owning side of the relation if necessary
-        if ($server === null && $this->server !== null) {
-            $this->server->setWorkspace(null);
+        if ($application === null && $this->application !== null) {
+            $this->application->setWorkspace(null);
         }
 
-        // set the owning side of the relation if necessary
-        if ($server !== null && $server->getWorkspace() !== $this) {
-            $server->setWorkspace($this);
+        if ($application !== null && $application->getWorkspace() !== $this) {
+            $application->setWorkspace($this);
         }
 
-        $this->server = $server;
+        $this->application = $application;
 
         return $this;
     }
 
     /**
-     * @return Collection|User[]
+     * @return Collection|UserInterface[]
      */
     public function getUsers(): Collection
     {
         return $this->users;
     }
 
-    public function addUser(User $user): self
+    public function addUser(UserInterface $user): self
     {
         if (!$this->users->contains($user)) {
             $this->users[] = $user;
@@ -97,7 +96,7 @@ class Workspace
         return $this;
     }
 
-    public function removeUser(User $user): self
+    public function removeUser(UserInterface $user): self
     {
         if ($this->users->removeElement($user)) {
             $user->removeWorkspace($this);

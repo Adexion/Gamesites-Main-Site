@@ -2,18 +2,20 @@
 
 namespace App\Entity;
 
-use App\Repository\ServerRepository;
+use App\Repository\ApplicationRepository;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Entity(repositoryClass=ServerRepository::class)
+ * @ORM\Entity(repositoryClass=ApplicationRepository::class)
  * @UniqueEntity(fields={"name"}, message="There is already an application with this name")
  */
-class Server
+class Application
 {
     /**
      * @ORM\Id
@@ -39,7 +41,7 @@ class Server
     private $domain;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="server")
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="application")
      */
     private $client;
 
@@ -54,22 +56,22 @@ class Server
     private $wasInstallerRun = false;
 
     /**
-     * @ORM\ManyToOne(targetEntity=ServerHistory::class, inversedBy="server")
+     * @ORM\ManyToOne(targetEntity=ApplicationHistory::class, inversedBy="application")
      */
     private $history;
 
     /**
-     * @ORM\OneToMany(targetEntity=Invoice::class, mappedBy="server")
+     * @ORM\OneToMany(targetEntity=Invoice::class, mappedBy="application")
      */
     private $invoice;
 
     /**
      * @ORM\Column(type="boolean", options={"default": false})
      */
-    private $instalationFinish = false;
+    private $installationFinish = false;
 
     /**
-     * @ORM\OneToOne(targetEntity=Workspace::class, inversedBy="server", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=Workspace::class, inversedBy="application", cascade={"persist", "remove"})
      */
     private $workspace;
 
@@ -133,11 +135,11 @@ class Server
         return $this->client;
     }
 
-    public function addClient(User $client): self
+    public function addClient(UserInterface $client): self
     {
         if (!$this->client->contains($client)) {
             $this->client[] = $client;
-            $client->addServer($this);
+            $client->addApplication($this);
         }
 
         return $this;
@@ -146,30 +148,30 @@ class Server
     public function removeClient(User $client): self
     {
         if ($this->client->removeElement($client)) {
-            $client->removeServer($this);
+            $client->removeApplication($this);
         }
 
         return $this;
     }
 
-    public function getExpiryDate(): ?\DateTimeInterface
+    public function getExpiryDate(): ?DateTimeInterface
     {
         return $this->expiryDate;
     }
 
-    public function setExpiryDate(\DateTimeInterface $expiryDate): self
+    public function setExpiryDate(DateTimeInterface $expiryDate): self
     {
         $this->expiryDate = $expiryDate;
 
         return $this;
     }
 
-    public function getHistory(): ?ServerHistory
+    public function getHistory(): ?ApplicationHistory
     {
         return $this->history;
     }
 
-    public function setHistory(?ServerHistory $history): self
+    public function setHistory(?ApplicationHistory $history): self
     {
         $this->history = $history;
 
@@ -188,7 +190,7 @@ class Server
     {
         if (!$this->invoice->contains($invoice)) {
             $this->invoice[] = $invoice;
-            $invoice->setServer($this);
+            $invoice->setApplication($this);
         }
 
         return $this;
@@ -197,9 +199,8 @@ class Server
     public function removeInvoice(Invoice $invoice): self
     {
         if ($this->invoice->removeElement($invoice)) {
-            // set the owning side to null (unless already changed)
-            if ($invoice->getServer() === $this) {
-                $invoice->setServer(null);
+            if ($invoice->getApplication() === $this) {
+                $invoice->setApplication(null);
             }
         }
 
@@ -218,14 +219,14 @@ class Server
         return $this->wasInstallerRun;
     }
 
-    public function getInstalationFinish(): ?bool
+    public function getInstallationFinish(): ?bool
     {
-        return $this->instalationFinish;
+        return $this->installationFinish;
     }
 
-    public function setInstalationFinish(bool $instalationFinish): self
+    public function setInstallationFinish(bool $installationFinish): self
     {
-        $this->instalationFinish = $instalationFinish;
+        $this->installationFinish = $installationFinish;
 
         return $this;
     }

@@ -9,6 +9,7 @@ use App\Service\MailerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -39,8 +40,12 @@ class SecurityController extends AbstractController
      * @Route("/register", name="app_register")
      * @throws TransportExceptionInterface
      */
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager, MailerService $mailerService): Response
-    {
+    public function register(
+        Request $request,
+        UserPasswordHasherInterface $userPasswordHasher,
+        EntityManagerInterface $entityManager,
+        MailerService $mailerService
+    ): Response {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
@@ -71,7 +76,7 @@ class SecurityController extends AbstractController
     /**
      * @Route("/activate/{token}", name="app_verification")
      */
-    public function activation(string $token, EntityManagerInterface $entityManager, ManagerRegistry $registry)
+    public function activation(string $token, EntityManagerInterface $entityManager, ManagerRegistry $registry): RedirectResponse
     {
         $user = $registry->getRepository(User::class)->findOneBy(['token' => $token]);
         if (!$user || $user->isActive()) {
@@ -84,6 +89,7 @@ class SecurityController extends AbstractController
         $entityManager->flush();
 
         $this->addFlash('success', 'Twoje konto zostało aktywowane.');
+
         return $this->redirectToRoute('app_login');
     }
 }

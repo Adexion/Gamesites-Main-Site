@@ -5,13 +5,13 @@
         </h6>
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link {% if app.request.get('_route') == 'app_server_list' %}active{% endif %}" aria-current="page" href="{{ path('app_server_list') }}">
+                <a class="nav-link {% if app.request.get('_route') == 'app_application_list' %}active{% endif %}" aria-current="page" href="{{ path('app_application_list') }}">
                     <i class="fas fa-desktop feather"></i>
                     Aplikacje
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="#">
+                <a class="nav-link {% if app.request.get('_route') == 'app_profile' %}active{% endif %}" aria-current="page" href="{{ path('app_profile') }}">
                     <i class="fas fa-user feather"></i>
                     Profil
                 </a>

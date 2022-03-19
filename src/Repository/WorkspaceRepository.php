@@ -2,10 +2,10 @@
 
 namespace App\Repository;
 
-use App\Entity\User;
 use App\Entity\Workspace;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @method Workspace|null find($id, $lockMode = null, $lockVersion = null)
@@ -20,7 +20,7 @@ class WorkspaceRepository extends ServiceEntityRepository
         parent::__construct($registry, Workspace::class);
     }
 
-    public function getUserWorkspaces(User $user)
+    public function getUserWorkspaces(UserInterface $user)
     {
         return $this->createQueryBuilder('w')
             ->join('w.users', 'wu')

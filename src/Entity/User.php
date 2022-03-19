@@ -41,9 +41,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $password;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Server::class, inversedBy="client")
+     * @ORM\ManyToMany(targetEntity=Application::class, inversedBy="client")
      */
-    private $server;
+    private $application;
 
     /**
      * @ORM\OneToOne(targetEntity=Address::class, inversedBy="client", cascade={"persist", "remove"})
@@ -71,9 +71,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $workspace;
 
+    private $enabled;
+
     public function __construct()
     {
-        $this->server = new ArrayCollection();
+        $this->application = new ArrayCollection();
         $this->invoice = new ArrayCollection();
         $this->workspace = new ArrayCollection();
     }
@@ -124,30 +126,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(?string $password): self
     {
+        if (!$password) {
+            return $this;
+        }
+
         $this->password = $password;
 
         return $this;
     }
 
-    public function getServer(): Collection
+    public function getApplication(): Collection
     {
-        return $this->server;
+        return $this->application;
     }
 
-    public function addServer(Server $server): self
+    public function addApplication(Application $application): self
     {
-        if (!$this->server->contains($server)) {
-            $this->server[] = $server;
+        if (!$this->application->contains($application)) {
+            $this->application[] = $application;
         }
 
         return $this;
     }
 
-    public function removeServer(Server $server): self
+    public function removeApplication(Application $application): self
     {
-        $this->server->removeElement($server);
+        $this->application->removeElement($application);
 
         return $this;
     }
@@ -188,6 +194,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials()
     {
+
     }
 
     public function getToken(): ?string
@@ -223,7 +230,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeInvoice(Invoice $invoice): self
     {
         if ($this->invoice->removeElement($invoice)) {
-            // set the owning side to null (unless already changed)
             if ($invoice->getClient() === $this) {
                 $invoice->setClient(null);
             }
@@ -252,6 +258,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeWorkspace(Workspace $workspace): self
     {
         $this->workspace->removeElement($workspace);
+
+        return $this;
+    }
+
+    public function getEnabled(): ?bool
+    {
+        return $this->enabled;
+    }
+
+    public function setEnabled(?bool $enabled): self
+    {
+        $this->enabled = $enabled;
 
         return $this;
     }
