@@ -29,7 +29,8 @@
             <td>{{ loop.index }}</td>
             <td>{{ workspace.name }}</td>
             <td>
-                <a href="{{ path('app_workspace_select', {'workspace': workspace.name}) }}" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Przełącz obszar roboczy"><i class="fas fa-play-circle"></i></a>
+                <a href="{{ path('app_workspace_select', {'id': workspace.id}) }}" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Przełącz obszar roboczy"><i class="fas fa-play-circle"></i></a>
+                <a href="{{ path('app_workspace_user_add', {'id': workspace.id}) }}" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Dodaj użytkownika do tego obszaru"><i class="fas fa-user-plus"></i></a>
             </td>
         </tr>
     {% endfor %}

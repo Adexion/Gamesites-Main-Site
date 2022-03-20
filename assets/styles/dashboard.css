@@ -113,6 +113,10 @@ body {
     border-radius: 0;
 }
 
+.navbar .dropdown-menu {
+    position: absolute;
+}
+
 .form-control-dark {
     color: #fff;
     background-color: rgba(255, 255, 255, .1);

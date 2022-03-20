@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Form\ApplicationResetPasswordType;
 use App\Form\UserProfileType;
 use App\Service\ApplicationService;
 use Doctrine\DBAL\Exception;
@@ -37,6 +38,29 @@ class UserController extends AbstractController
 
         return $this->render('dashboard/page/user/profile.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard/profile/password" , name="app_profile_password")
+     * @throws Exception
+     */
+    public function resetAllApplicationPassword(Request $request, ApplicationService $applicationService, EntityManagerInterface $manager)
+    {
+        $form = $this->createForm(ApplicationResetPasswordType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $applicationService->setPasswordForAllApplications($this->getUser(), $form->getData()['password'], true);
+
+            $manager->persist($user);
+            $manager->flush();
+
+            return $this->redirectToRoute('app_profile');
+        }
+
+        return $this->render('dashboard/page/user/password.html.twig', [
+            'form' => $form->createView()
         ]);
     }
 }

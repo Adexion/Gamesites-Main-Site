@@ -11,12 +11,6 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {% if app.request.get('_route') == 'app_profile' %}active{% endif %}" aria-current="page" href="{{ path('app_profile') }}">
-                    <i class="fas fa-user feather"></i>
-                    Profil
-                </a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link {% if app.request.get('_route') == 'app_order' %}active{% endif %}" href="{{ path('app_order') }}">
                     <i class="fas fa-tasks feather"></i>
                     Realizacja zamówienia

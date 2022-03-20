@@ -52,6 +52,14 @@ class RemoteRepository
     {
         $hash = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
 
+        try {
+            $this->con->insert('user', [
+                'email' => $user->getUserIdentifier(),
+                'roles' => '["ROLE_ADMIN"]',
+                'password' => $hash,
+            ]);
+        } catch (Exception $e) {}
+
         $this->con->update('user', ['password' => $hash], [
             'email' => $user->getUserIdentifier(),
         ]);
