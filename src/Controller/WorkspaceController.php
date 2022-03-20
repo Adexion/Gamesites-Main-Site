@@ -18,10 +18,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 
-
 class WorkspaceController extends AbstractController
 {
-
     /**
      * @Route("/dashboard/workspace", name="app_workspace_list")
      */
@@ -53,6 +51,7 @@ class WorkspaceController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $workspace->addUser($this->getUser());
+            $workspace->setCreator($this->getUser());
             $manager->persist($workspace);
             $manager->flush();
 
@@ -61,6 +60,16 @@ class WorkspaceController extends AbstractController
 
         return $this->render('dashboard/page/workspace/create.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard/workspace/{id}/user/list", name="app_workspace_user_list")
+     */
+    public function userList(Workspace $workspace): Response
+    {
+        return $this->render('dashboard/page/workspace/list.user.html.twig', [
+            'workspace' => $workspace,
         ]);
     }
 
@@ -98,12 +107,63 @@ class WorkspaceController extends AbstractController
             $manager->persist($user);
             $manager->flush();
 
-            return $this->redirectToRoute('app_workspace_list');
+            return $this->redirectToRoute('app_workspace_user_list', ['id' => $workspace->getId()]);
         }
 
         return $this->render('dashboard/page/workspace/add.user.html.twig', [
             'workspace' => $workspace,
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/dashboard/workspace/{id}/user/delete/{userId}", name="app_workspace_user_delete")
+     */
+    public function deleteUser(Workspace $workspace, string $userId, UserRepository $repository, EntityManagerInterface $manager): RedirectResponse
+    {
+        if ($workspace->getCreator() !== $this->getUser()) {
+            return $this->redirectToRoute('app_workspace_user_list', ['id' => $workspace->getId()]);
+        }
+
+        $workspace->removeUser($repository->find($userId));
+        $manager->persist($workspace);
+        $manager->flush();
+
+        return $this->redirectToRoute('app_workspace_user_list', ['id' => $workspace->getId()]);
+    }
+
+    /**
+     * @Route("/dashboard/workspace/{id}/user/creator/{userId}", name="app_workspace_user_creator")
+     */
+    public function giveCreator(Workspace $workspace, string $userId, UserRepository $repository, EntityManagerInterface $manager): RedirectResponse
+    {
+        if ($workspace->getCreator() !== $this->getUser()) {
+            return $this->redirectToRoute('app_workspace_user_list', ['id' => $workspace->getId()]);
+        }
+
+        $workspace->setCreator($repository->find($userId));
+        $manager->persist($workspace);
+        $manager->flush();
+
+        return $this->redirectToRoute('app_workspace_user_list', ['id' => $workspace->getId()]);
+    }
+
+    /**
+     * @Route("/dashboard/workspace/{id}/leave", name="app_workspace_leave")
+     */
+    public function leaveWorkspace(Workspace $workspace, UserRepository $repository, EntityManagerInterface $manager): RedirectResponse
+    {
+        if ($workspace->getCreator() === $this->getUser()) {
+            return $this->redirectToRoute('app_workspace_user_list', ['id' => $workspace->getId()]);
+        }
+
+        /** @var User $user */
+        $user =  $this->getUser();
+
+        $user->removeWorkspace($workspace);
+        $manager->persist($user);
+        $manager->flush();
+
+        return $this->redirectToRoute('app_workspace_list', ['id' => $workspace->getId()]);
     }
 }

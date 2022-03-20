@@ -35,6 +35,12 @@ class Workspace
      */
     private $users;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $creator;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -101,6 +107,18 @@ class Workspace
         if ($this->users->removeElement($user)) {
             $user->removeWorkspace($this);
         }
+
+        return $this;
+    }
+
+    public function getCreator(): ?User
+    {
+        return $this->creator;
+    }
+
+    public function setCreator(?UserInterface $creator): self
+    {
+        $this->creator = $creator;
 
         return $this;
     }
