@@ -31,7 +31,6 @@ class Application
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true, unique=true)
-     * @Assert\Unique
      */
     private $name;
 
@@ -39,11 +38,6 @@ class Application
      * @ORM\Column(type="string", length=255)
      */
     private $domain;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="application")
-     */
-    private $client;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
@@ -74,6 +68,12 @@ class Application
      * @ORM\OneToOne(targetEntity=Workspace::class, inversedBy="application", cascade={"persist", "remove"})
      */
     private $workspace;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $creator;
 
     public function __construct()
     {
@@ -123,33 +123,6 @@ class Application
     public function setDomain(string $domain): self
     {
         $this->domain = $domain;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|User[]
-     */
-    public function getClient(): Collection
-    {
-        return $this->client;
-    }
-
-    public function addClient(UserInterface $client): self
-    {
-        if (!$this->client->contains($client)) {
-            $this->client[] = $client;
-            $client->addApplication($this);
-        }
-
-        return $this;
-    }
-
-    public function removeClient(User $client): self
-    {
-        if ($this->client->removeElement($client)) {
-            $client->removeApplication($this);
-        }
 
         return $this;
     }
@@ -239,6 +212,18 @@ class Application
     public function setWorkspace(?Workspace $workspace): self
     {
         $this->workspace = $workspace;
+
+        return $this;
+    }
+
+    public function getCreator(): ?User
+    {
+        return $this->creator;
+    }
+
+    public function setCreator(?UserInterface $creator): self
+    {
+        $this->creator = $creator;
 
         return $this;
     }

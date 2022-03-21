@@ -24,13 +24,14 @@ class ApplicationRepository extends ServiceEntityRepository
     public function getCurrentApplications(?Workspace $workspace, UserInterface $user): array
     {
         $qb = $this->createQueryBuilder('s')
-            ->join('s.client', 'c')
+            ->join('s.creator', 'c')
             ->where('c.id = :cid AND s.workspace is null')
             ->setParameter(':cid', $user->getId());
 
         if ($workspace) {
-            $qb->join('s.workspace', 'w')
-                ->orWhere('w = :id')
+            $qb
+                ->leftJoin('s.workspace', 'w')
+                ->orWhere('w.id = :id')
                 ->setParameter(':id', $workspace);
         }
 
@@ -44,7 +45,7 @@ class ApplicationRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('s')
             ->join('s.workspace', 'w')
             ->join('w.users', 'u1')
-            ->join('s.client', 'u2')
+            ->join('s.creator', 'u2')
             ->where('u1.id = ' . $user->getId())
             ->orWhere('u2.id = ' . $user->getId())
             ->getQuery()

@@ -17,16 +17,4 @@ class DashboardController extends AbstractController
     {
         return $this->render('dashboard/page/dashboard.html.twig');
     }
-
-    /**
-     * @Route("/dashboard/application", name="app_application_list")
-     */
-    public function application(ApplicationRepository $repository, RequestStack $requestStack): Response
-    {
-        $workspace = $requestStack->getSession()->get('workspace');
-
-        return $this->render('dashboard/page/application.html.twig', [
-            'userApplicationList' => $repository->getCurrentApplications($workspace, $this->getUser()),
-        ]);
-    }
 }

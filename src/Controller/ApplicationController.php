@@ -3,9 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Application;
+use App\Form\ApplicationEditType;
 use App\Form\ApplicationResetPasswordType;
-use App\Form\OrderType;
 use App\Form\ApplicationSetupType;
+use App\Form\OrderType;
 use App\Repository\ApplicationRepository;
 use App\Repository\OrderRepository;
 use App\Repository\RemoteRepository;
@@ -14,11 +15,24 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class ApplicationController extends AbstractController
 {
+    /**
+     * @Route("/dashboard/application", name="app_application_list")
+     */
+    public function application(ApplicationRepository $repository, RequestStack $requestStack): Response
+    {
+        $workspace = $requestStack->getSession()->get('workspace');
+
+        return $this->render('dashboard/page/application.html.twig', [
+            'userApplicationList' => $repository->getCurrentApplications($workspace, $this->getUser()),
+        ]);
+    }
+
     /**
      * @Route("/dashboard/order", name="app_order")
      */
@@ -58,7 +72,7 @@ class ApplicationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $name = $form->getData()['name'];
             if (!$application->getName() || $application->getName() === $name) {
-                $application->addClient($this->getUser());
+                $application->setCreator($this->getUser());
                 $application->setName($name);
 
                 $manager->persist($application);
@@ -88,16 +102,38 @@ class ApplicationController extends AbstractController
             ]);
         }
 
-        $form = $this->createForm(ApplicationResetPasswordType::class);
-        $form->handleRequest($request);
-        if ($form->isSubmitted() && $form->isValid()) {
+        $resetPasswordForm = $this->createForm(ApplicationResetPasswordType::class);
+        $resetPasswordForm->handleRequest($request);
+        if ($resetPasswordForm->isSubmitted() && $resetPasswordForm->isValid()) {
             $remoteRepository = new RemoteRepository($application->getDir());
-            $remoteRepository->updateUserPassword($this->getUser(), $form->getData()['password']);
+            $remoteRepository->updateUserPassword($this->getUser(), $resetPasswordForm->getData()['password']);
         }
 
         return $this->render('dashboard/page/application/settings.html.twig', [
             'application' => $application,
-            'form' => $form->createView(),
+            'resetPasswordForm' => $resetPasswordForm->createView(),
+            'editForm' => $this->createForm(ApplicationEditType::class, $application, ['user' => $this->getUser()])->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard/setting/{coupon}/edit", name="app_setting_edit")
+     */
+    public function edit(string $coupon, ApplicationRepository $repository, Request $request, EntityManagerInterface $manager): Response
+    {
+        $application = $repository->findOneBy(['coupon' => $coupon]);
+        $editForm = $this->createForm(ApplicationEditType::class, $application, ['user' => $this->getUser(), 'name' => $application->getName()]);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $manager->persist($application);
+            $manager->flush();
+        }
+
+        return $this->render('dashboard/page/application/settings.html.twig', [
+            'application' => $application,
+            'resetPasswordForm' => $this->createForm(ApplicationResetPasswordType::class)->createView(),
+            'editForm' => $editForm->createView(),
         ]);
     }
 
