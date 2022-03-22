@@ -2,13 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\Application;
 use App\Form\ApplicationEditType;
 use App\Form\ApplicationResetPasswordType;
 use App\Form\ApplicationSetupType;
-use App\Form\RealizeOrderType;
 use App\Repository\ApplicationRepository;
-use App\Repository\OrderRepository;
 use App\Repository\RemoteRepository;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
