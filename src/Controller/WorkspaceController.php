@@ -164,6 +164,16 @@ class WorkspaceController extends AbstractController
         $manager->persist($user);
         $manager->flush();
 
-        return $this->redirectToRoute('app_workspace_list', ['id' => $workspace->getId()]);
+        return $this->redirectToRoute('app_workspace_list');
+    }
+
+    /**
+     * @Route("/dashboard/workspce/checkout", name="app_workspace_check_out")
+     */
+    public function checkout(Request $request):Response
+    {
+        $request->getSession()->remove('workspace');
+
+        return $this->redirectToRoute('app_workspace_list');
     }
 }

@@ -3,7 +3,12 @@
 {% block body %}
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">List dostępnych obszarów roboczych</h1>
-        <a class="btn-danger btn" href="{{ path('app_workspace_create') }}">Dodaj obszar roboczy</a>
+        <div>
+            <a class="btn-danger btn" href="{{ path('app_workspace_create') }}">Dodaj obszar roboczy</a>
+            {% if app.session.get('workspace') is not empty %}
+                <a href="{{ path('app_workspace_check_out') }}" class="btn-danger btn" >Opuść obszar</a>
+            {% endif %}
+        </div>
     </div>
 
     {% if workspaceList is empty %}

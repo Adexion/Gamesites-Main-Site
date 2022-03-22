@@ -22,7 +22,6 @@ class ApplicationAPIController extends AbstractController
 {
     /**
      * @Route("/v1/setup/initialize", name="app_api_initial")
-     * @throws ORMException
      */
     public function initialize(Request $request, ApplicationRepository $repository, EntityManagerInterface $manager): Response
     {

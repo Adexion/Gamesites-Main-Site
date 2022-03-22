@@ -6,7 +6,7 @@ use App\Entity\Application;
 use App\Form\ApplicationEditType;
 use App\Form\ApplicationResetPasswordType;
 use App\Form\ApplicationSetupType;
-use App\Form\OrderType;
+use App\Form\RealizeOrderType;
 use App\Repository\ApplicationRepository;
 use App\Repository\OrderRepository;
 use App\Repository\RemoteRepository;
@@ -33,33 +33,6 @@ class ApplicationController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/dashboard/order", name="app_order")
-     */
-    public function order(Request $request, OrderRepository $repository, EntityManagerInterface $manager): Response
-    {
-        $application = new Application();
-        $form = $this->createForm(OrderType::class, $application);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $order = $repository->findOneBy(['coupon' => $application->getCoupon()]);
-            $application->setExpiryDate($order->getExpiryDate());
-
-            if (!$manager->getRepository(Application::class)->findOneBy(['coupon' => $application->getCoupon()])) {
-                $manager->persist($application);
-                $manager->flush();
-            }
-
-            return $this->redirectToRoute('app_setup', [
-                'coupon' => $application->getCoupon(),
-            ]);
-        }
-
-        return $this->render('dashboard/page/order/orderRealization.html.twig', [
-            'form' => $form->createView(),
-        ]);
-    }
 
     /**
      * @Route("/dashboard/setup/{coupon}", name="app_setup")

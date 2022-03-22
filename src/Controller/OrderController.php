@@ -1,0 +1,87 @@
+<?php
+
+namespace App\Controller;
+
+use App\Entity\Application;
+use App\Entity\Order;
+use App\Form\CreateOrderType;
+use App\Form\RealizeOrderType;
+use App\Repository\OrderRepository;
+use App\Service\RandomCouponGenerator;
+use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
+
+class OrderController extends AbstractController
+{
+    /**
+     * @Route("/dashboard/order/realize", name="app_order_realize")
+     * @throws Exception
+     */
+    public function realizeOrder(Request $request, OrderRepository $repository, EntityManagerInterface $manager): Response
+    {
+        if (!$this->getUser()->getAddress()) {
+            $this->addFlash('error', 'Dane adresowe są wymagany w celu złożenia zamówienia.');
+
+            return $this->redirectToRoute('app_profile');
+        }
+
+        $application = new Application();
+        $form = $this->createForm(RealizeOrderType::class, $application);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $order = $repository->findOneBy(['coupon' => $application->getCoupon()]);
+            $application->setExpiryDate(new DateTime($order->getExpiryDate()));
+
+            if (!$manager->getRepository(Application::class)->findOneBy(['coupon' => $application->getCoupon()])) {
+                $manager->persist($application);
+                $manager->flush();
+            }
+
+            return $this->redirectToRoute('app_setup', [
+                'coupon' => $application->getCoupon(),
+            ]);
+        }
+
+        return $this->render('dashboard/page/order/orderRealization.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard/order/create", name="app_order_create")
+     */
+    public function generateOrder(Request $request, RandomCouponGenerator $couponGenerator, EntityManagerInterface $entityManager): Response
+    {
+        if (!$this->getUser()->getAddress()) {
+            $this->addFlash('error', 'Dane adresowe są wymagany w celu złożenia zamówienia.');
+
+            return $this->redirectToRoute('app_profile');
+        }
+
+        $order = new Order();
+        $form = $this->createForm(CreateOrderType::class, $order);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $order->setCoupon($couponGenerator->generate());
+            $order->setIsActive($order->getInvoice() && $this->getUser()->getAddress()->getTin());
+
+            $entityManager->persist($order);
+            $entityManager->flush();
+
+            //ToDo: add payment mechanism here
+            return $this->render('dashboard/page/order/orderConfirmation.html.twig', [
+                'order' => $order
+            ]);
+        }
+
+        return $this->render('dashboard/page/order/orderCreate.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+}
