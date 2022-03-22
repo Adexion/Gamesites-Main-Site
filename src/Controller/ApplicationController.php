@@ -33,7 +33,6 @@ class ApplicationController extends AbstractController
         ]);
     }
 
-
     /**
      * @Route("/dashboard/setup/{coupon}", name="app_setup")
      */

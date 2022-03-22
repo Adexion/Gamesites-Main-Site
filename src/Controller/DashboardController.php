@@ -15,6 +15,6 @@ class DashboardController extends AbstractController
      */
     public function dashboard(): Response
     {
-        return $this->render('dashboard/page/dashboard.html.twig');
+        return $this->redirectToRoute('app_application_list');
     }
 }
