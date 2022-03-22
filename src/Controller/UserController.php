@@ -18,16 +18,23 @@ class UserController extends AbstractController
      * @Route("/dashboard/profile" , name="app_profile")
      * @throws Exception
      */
-    public function profile(Request $request, ApplicationService $applicationService, EntityManagerInterface $manager): Response
-    {
+    public function profile(
+        Request $request,
+        ApplicationService $applicationService,
+        EntityManagerInterface $manager
+    ): Response {
         $form = $this->createForm(UserProfileType::class, [
             'address' => $this->getUser()->getAddress(),
-            'email' => $this->getUser()->getUserIdentifier()
+            'email' => $this->getUser()->getUserIdentifier(),
         ]);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $applicationService->setPasswordForAllApplications($this->getUser(), $form->getData()['password'], $form->getData()['each']);
+            $user = $applicationService->setPasswordForAllApplications(
+                $this->getUser(),
+                $form->getData()['password'],
+                $form->getData()['each']
+            );
             $user->setAddress($form->getData()['address']);
 
             $manager->persist($user);
@@ -45,13 +52,21 @@ class UserController extends AbstractController
      * @Route("/dashboard/profile/password" , name="app_profile_password")
      * @throws Exception
      */
-    public function resetAllApplicationPassword(Request $request, ApplicationService $applicationService, EntityManagerInterface $manager)
-    {
+    public function resetAllApplicationPassword(
+        Request $request,
+        ApplicationService $applicationService,
+        EntityManagerInterface $manager
+    ) {
         $form = $this->createForm(ApplicationResetPasswordType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $applicationService->setPasswordForAllApplications($this->getUser(), $form->getData()['password'], true);
+            $user = $applicationService->setPasswordForAllApplications(
+                $this->getUser(),
+                $form->getData()['password'],
+                true
+            );
+            $user->setForceChangePassword(false);
 
             $manager->persist($user);
             $manager->flush();
@@ -60,7 +75,7 @@ class UserController extends AbstractController
         }
 
         return $this->render('dashboard/page/user/password.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 }

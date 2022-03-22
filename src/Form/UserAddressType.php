@@ -7,6 +7,7 @@ use Symfony\Component\Form\Extension\Core\Type\BaseType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Length;
 
 class UserAddressType extends BaseType
 {
@@ -22,7 +23,9 @@ class UserAddressType extends BaseType
             ->add('apartmentNumber', TextType::class, ['required' => false])
             ->add('city', TextType::class)
             ->add('postCode', TextType::class)
-            ->add('tin', TextType::class, ['required' => false]);
+            ->add('tin', TextType::class, ['required' => false, 'constraints' => [
+                new Length(10)
+            ]]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

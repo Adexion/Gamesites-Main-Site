@@ -74,7 +74,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="boolean", options={"default": false})
      */
-    private $forceChangePassword;
+    private $forceChangePassword = false;
 
     public function __construct()
     {

@@ -89,7 +89,7 @@ class WorkspaceController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             if (!$user = $userRepository->findOneBy(['email' => $form->getData()['email']])) {
-                $password = hash('md5', date('Y-m-d'));
+                $password = hash('md5', date('Y-m-d H:i:s'));
 
                 $user = (new User())
                     ->setEmail($form->getData()['email'])
@@ -97,8 +97,7 @@ class WorkspaceController extends AbstractController
                     ->setIsActive(true)
                     ->setForceChangePassword(true);
 
-                $user->setPassword($hasher->hashPassword($user, $password));
-
+                $user->setPassword(password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]));
                 $mailerService->sendTemporaryPassword($user, $workspace, $password);
             }
 
