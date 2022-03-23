@@ -12,6 +12,7 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -39,6 +40,7 @@ class OrderController extends AbstractController
             $application->setExpiryDate(new DateTime($order->getExpiryDate()));
 
             if (!$manager->getRepository(Application::class)->findOneBy(['coupon' => $application->getCoupon()])) {
+                $application->setCreator($this->getUser());
                 $manager->persist($application);
                 $manager->flush();
             }
@@ -83,5 +85,37 @@ class OrderController extends AbstractController
         return $this->render('dashboard/page/order/orderCreate.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+
+    /**
+     * @Route("/admin/order/list", name="app_admin_order_list")
+     */
+    public function adminOrderList(OrderRepository $repository): Response
+    {
+        return $this->render('dashboard/page/admin/order/list.html.twig', [
+            'orders' => $repository->findAll()
+        ]);
+    }
+
+    /**
+     * @Route("/admin/order/toggle/{id}", name="app_admin_order_toggle")
+     */
+    public function adminOrderToggle(Order $order, EntityManagerInterface $manager): RedirectResponse
+    {
+        $order->setIsActive(!$order->getIsActive());
+        $manager->persist($order);
+        $manager->flush();
+        return $this->redirectToRoute('app_admin_order_list');
+    }
+
+    /**
+     * @Route("/admin/order/remove/{id}", name="app_admin_order_remove")
+     */
+    public function adminOrderRemove(Order $order, EntityManagerInterface $manager): RedirectResponse
+    {
+        $manager->remove($order);
+        $manager->flush();
+        return $this->redirectToRoute('app_admin_order_list');
     }
 }

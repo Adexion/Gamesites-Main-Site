@@ -1,0 +1,42 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">List zamówień</h1>
+    </div>
+
+    {% if orders is empty %}
+        <div class="pt-3 d-flex justify-content-center">
+            <h1 class="h2">
+                Brak zamówień
+            </h1>
+        </div>
+    {% else %}
+        <div class="table-responsive">
+        <table class="table table-striped table-sm">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Kupon</th>
+            <th scope="col">Aktywny</th>
+            <th scope="col">Faktura</th>
+            <th scope="col">Akcje</th>
+        </tr>
+        </thead>
+        <tbody>
+    {% endif %}
+    {% for order in orders %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ order.coupon }}</td>
+            <td>{{ order.isActive ? 'Aktywny' : 'Nieaktywny' }}</td>
+            <td>{{ order.invoice ? 'Wybrana' : 'Brak' }}</td>
+
+            <td>
+                <a href="{{ path('app_admin_order_toggle', {'id': order.id}) }}" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if not order.isActive %}Aktywuj{% else %} Deaktywuj {% endif %} kupon"><i class="fas fa-play-circle"></i></a>
+                <a href="{{ path('app_admin_order_remove', {'id': order.id}) }}" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Usuń kupon"><i class="fas fa-trash"></i></a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+{% endblock %}

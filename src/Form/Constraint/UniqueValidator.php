@@ -26,7 +26,7 @@ class UniqueValidator extends ConstraintValidator
             throw new RuntimeException("Field class is not correct set");
         }
 
-        if ($value === $constraint->skip) {
+        if (isset($constraint->skip) && $value === $constraint->skip) {
             return;
         }
 
