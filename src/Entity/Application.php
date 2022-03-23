@@ -57,7 +57,7 @@ class Application
     /**
      * @ORM\OneToMany(targetEntity=Invoice::class, mappedBy="application")
      */
-    private $invoice;
+    private $invoices;
 
     /**
      * @ORM\Column(type="boolean", options={"default": false})
@@ -75,10 +75,15 @@ class Application
      */
     private $creator;
 
+    /**
+     * @ORM\Column(type="boolean", options={"default": false})
+     */
+    private $invoice = false;
+
     public function __construct()
     {
         $this->client = new ArrayCollection();
-        $this->invoice = new ArrayCollection();
+        $this->invoices = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -154,15 +159,15 @@ class Application
     /**
      * @return Collection|Invoice[]
      */
-    public function getInvoice(): Collection
+    public function getInvoices(): Collection
     {
-        return $this->invoice;
+        return $this->invoices;
     }
 
     public function addInvoice(Invoice $invoice): self
     {
-        if (!$this->invoice->contains($invoice)) {
-            $this->invoice[] = $invoice;
+        if (!$this->invoices->contains($invoice)) {
+            $this->invoices[] = $invoice;
             $invoice->setApplication($this);
         }
 
@@ -171,7 +176,7 @@ class Application
 
     public function removeInvoice(Invoice $invoice): self
     {
-        if ($this->invoice->removeElement($invoice)) {
+        if ($this->invoices->removeElement($invoice)) {
             if ($invoice->getApplication() === $this) {
                 $invoice->setApplication(null);
             }
@@ -224,6 +229,18 @@ class Application
     public function setCreator(?UserInterface $creator): self
     {
         $this->creator = $creator;
+
+        return $this;
+    }
+
+    public function getInvoice(): ?bool
+    {
+        return $this->invoice;
+    }
+
+    public function setInvoice(bool $invoice): self
+    {
+        $this->invoice = $invoice;
 
         return $this;
     }

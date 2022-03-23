@@ -41,6 +41,7 @@ class OrderController extends AbstractController
 
             if (!$manager->getRepository(Application::class)->findOneBy(['coupon' => $application->getCoupon()])) {
                 $application->setCreator($this->getUser());
+                $application->setInvoice($order->getInvoice());
                 $manager->persist($application);
                 $manager->flush();
             }

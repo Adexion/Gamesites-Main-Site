@@ -36,6 +36,11 @@ class ApplicationController extends AbstractController
     public function configuration(string $coupon, Request $request, ApplicationRepository $repository, EntityManagerInterface $manager): Response
     {
         $application = $repository->findOneBy(['coupon' => $coupon]);
+
+        if (empty($application)) {
+            return $this->redirectToRoute('app_application_list');
+        }
+
         $form = $this->createForm(ApplicationSetupType::class);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
@@ -81,17 +86,26 @@ class ApplicationController extends AbstractController
         return $this->render('dashboard/page/application/settings.html.twig', [
             'application' => $application,
             'resetPasswordForm' => $resetPasswordForm->createView(),
-            'editForm' => $this->createForm(ApplicationEditType::class, $application, ['user' => $this->getUser()])->createView(),
+            'editForm' => $this->createForm(ApplicationEditType::class, $application, ['user' => $this->getUser()]
+            )->createView(),
         ]);
     }
 
     /**
      * @Route("/dashboard/setting/{coupon}/edit", name="app_setting_edit")
      */
-    public function edit(string $coupon, ApplicationRepository $repository, Request $request, EntityManagerInterface $manager): Response
-    {
+    public function edit(
+        string $coupon,
+        ApplicationRepository $repository,
+        Request $request,
+        EntityManagerInterface $manager
+    ): Response {
         $application = $repository->findOneBy(['coupon' => $coupon]);
-        $editForm = $this->createForm(ApplicationEditType::class, $application, ['user' => $this->getUser(), 'name' => $application->getName()]);
+        $editForm = $this->createForm(
+            ApplicationEditType::class,
+            $application,
+            ['user' => $this->getUser(), 'name' => $application->getName()]
+        );
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {

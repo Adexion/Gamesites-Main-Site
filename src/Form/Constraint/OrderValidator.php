@@ -36,9 +36,14 @@ class OrderValidator extends ConstraintValidator
             ['coupon' => $value, 'isActive' => true]
         );
 
+        if (empty($order)) {
+            return $this->context->buildViolation($constraint->message)
+                ->addViolation();
+        }
+
         $date = $order instanceof OrderEntity ? new DateTime($order->getExpiryDate()) : $order->getExpiryDate();
 
-        if (!$order || $date->format('YmdHis') < date('YmdHis')) {
+        if ($date->format('YmdHis') < date('YmdHis')) {
             $this->context->buildViolation($constraint->message)
                 ->addViolation();
         }
