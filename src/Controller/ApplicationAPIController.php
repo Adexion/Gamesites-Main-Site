@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -27,6 +28,10 @@ class ApplicationAPIController extends AbstractController
     {
         $content = json_decode($request->getContent(), true);
         $application = $repository->findOneBy(['coupon' => $content['token']]);
+
+        if ($application->getInstallationFinish() || $application->getWasInstallerRun()) {
+            throw new NotFoundHttpException();
+        }
 
         $commandList = [
             "cd /var/www/ && git clone git@github.com:Adexion/GameSitesSell.git {{ dir }}",

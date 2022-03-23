@@ -1,8 +1,9 @@
 global.token = document.getElementById('tokenInstaller').innerHTML;
 global.instalationError = false;
 global.instalationErrorCode = '';
+global.installationRun = false;
+window.onbeforeunload = confirmExit;
 
-//All steps in installation progress.
 const stepsList = [
     '/v1/setup/initialize',
     '/v1/setup/database',
@@ -27,6 +28,12 @@ document.getElementById('runInstaller').addEventListener('click', () => {
     });
 });
 
+function confirmExit() {
+    if (global.installationRun) {
+        return "Czy na pewno chcesz przerwać proces instalacji?";
+    }
+}
+
 function setPercentage(percent) {
     const progress = document.getElementById('progressInstaller');
 
@@ -43,9 +50,11 @@ function interpretativeResponse(json) {
 }
 
 async function startInstallApp() {
+    global.installationRun = true;
     for (const url of stepsList) {
         await makeApiCall(url);
     }
+    global.installationRun = false;
 }
 
 function checkErrorIfExist(error) {

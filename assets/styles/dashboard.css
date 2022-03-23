@@ -132,6 +132,13 @@ body {
 
 /* Ticket*/
 
+.ticket-btn {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    border-radius: 0;
+}
+
 .comment, .comment-reply {
     display: block;
     position: relative;
@@ -176,7 +183,7 @@ body {
 
 @media (max-width: 767px) {
     .message-title {
-        margin-left: -0.5rem;
+        margin-left: -0.75rem;
     }
 }
 /*

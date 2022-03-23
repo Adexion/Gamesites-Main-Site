@@ -3,12 +3,17 @@
 {% block body %}
     <div class="h-100 d-flex justify-content-center align-items-center">
         <div class="w-75">
+            {% for message in app.flashes('warning') %}
+                <div class="alert-warning alert w-100 alert-dismissible fade  show">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
             <div class="d-flex justify-content-between pb-3">
                 <h1>Instalator Gamesites</h1>
-                <!-- {% if application.wasInstallerRun == false %}<h1>3/3</h1>{% endif %} -->
             </div>
             <button id="btnInstaller" type="button" class="btn-success btn" data-bs-toggle="modal" data-bs-target="#modal">
-                {{ application.wasInstallerRun ? 'Zainstaluj ponownie': 'Rozpocznij instalacje' }}
+                Rozpocznij instalacje
             </button>
             <div id="installer" class="d-none mt-5">
                 <span id="tokenInstaller" class="d-none">{{ application.coupon }}</span>
@@ -20,9 +25,9 @@
             </div>
 
             <div id="installerError" class="d-none mt-5">
-                <h2>Bład instalacji</h2>
+                <h2>Błąd w trakcie instalacji</h2>
                 <div class="error">
-                    <p>Error Code: <span id="errorCode"></span></p>
+                    <p>Wystąpił błąd: <span id="errorCode"></span></p>
                     <p>Spróbuj ponownie. Jeżeli problem będzie się powtarzał skontaktuj się z administratorem</p>
                     <a href="{{ path('app_application_list') }}">Lista aplikacji</a>
                 </div>
@@ -38,13 +43,11 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    Czy aby na pewno
-                    chcesz {{ application.wasInstallerRun ? 'zainstalować aplikację z podanymi danymi?': 'ponownie uruchomić instalacje?' }}
+                    Czy aby na pewno chcesz zainstalować aplikację z podanymi danymi?
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Anuluj</button>
-                    <button type="button" class="btn btn-primary" id="runInstaller" data-bs-dismiss="modal">Uruchom
-                    </button>
+                    <button type="button" class="btn btn-primary" id="runInstaller" data-bs-dismiss="modal">Uruchom</button>
                 </div>
             </div>
         </div>

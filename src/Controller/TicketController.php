@@ -64,6 +64,10 @@ class TicketController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            if ($this->isGranted('ROLE_ADMIN')) {
+                $ticket->setStatus(TicketStatusEnum::WORKING);
+            }
+
             $message->setCreator($this->getUser());
             $message->setTicket($ticket);
             $manager->persist($message);
@@ -76,6 +80,20 @@ class TicketController extends AbstractController
             'ticket' => $ticket,
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * @Route("/ticket/close/{id}", name="app_ticket_close")
+     */
+    public function close(Ticket $ticket, EntityManagerInterface $entityManager)
+    {
+        if ($this->getUser() !== $ticket->getCreator() && !$this->isGranted("ROLE_ADMIN")) {
+            return $this->redirectToRoute('app_ticket_list');
+        }
+
+        $ticket->setStatus(TicketStatusEnum::CLOSED);
+        $entityManager->persist($ticket);
+        $entityManager->flush();
     }
 
     /**

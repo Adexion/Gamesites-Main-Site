@@ -36,7 +36,6 @@ class ApplicationController extends AbstractController
     public function configuration(string $coupon, Request $request, ApplicationRepository $repository, EntityManagerInterface $manager): Response
     {
         $application = $repository->findOneBy(['coupon' => $coupon]);
-
         if (empty($application)) {
             return $this->redirectToRoute('app_application_list');
         }
@@ -70,7 +69,7 @@ class ApplicationController extends AbstractController
     public function setting(string $coupon, ApplicationRepository $repository, Request $request): Response
     {
         $application = $repository->findOneBy(['coupon' => $coupon]);
-        if (!$application->getInstallationFinish()) {
+        if (!$application->getWasInstallerRun() && !$application->getInstallationFinish()) {
             return $this->redirectToRoute('app_install', [
                 'coupon' => $coupon,
             ]);
@@ -94,12 +93,7 @@ class ApplicationController extends AbstractController
     /**
      * @Route("/dashboard/setting/{coupon}/edit", name="app_setting_edit")
      */
-    public function edit(
-        string $coupon,
-        ApplicationRepository $repository,
-        Request $request,
-        EntityManagerInterface $manager
-    ): Response {
+    public function edit(string $coupon, ApplicationRepository $repository, Request $request, EntityManagerInterface $manager): Response {
         $application = $repository->findOneBy(['coupon' => $coupon]);
         $editForm = $this->createForm(
             ApplicationEditType::class,
@@ -127,8 +121,34 @@ class ApplicationController extends AbstractController
     {
         $application = $repository->findOneBy(['coupon' => $coupon]);
         if ($application->getWasInstallerRun() || $application->getInstallationFinish()) {
-            $this->redirectToRoute('app_application_list');
+            return $this->redirectToRoute('app_application_list');
         }
+
+        return $this->render('dashboard/page/application/installation.html.twig', [
+            'application' => $application,
+        ]);
+    }
+
+    /**
+     * @Route("/dashboard/setting/{coupon}/reinstall", name="app_reinstall")
+     */
+    public function reinstall(string $coupon, ApplicationRepository $repository, EntityManagerInterface $entityManager): Response
+    {
+        $application = $repository->findOneBy(['coupon' => $coupon]);
+        if (!$application->getWasInstallerRun() && !$application->getInstallationFinish()) {
+            return $this->redirectToRoute('app_application_list');
+        }
+        if ($application->getWasInstallerRun() && !$application->getInstallationFinish()) {
+            $this->addFlash(
+                'warning',
+                'Instalacja może być w toku. Upewnij się że nikt inny jej nie uruchomił zanim uruchomisz ją ponownie!'
+            );
+        }
+
+        $application->setInstallationFinish(false);
+        $application->setWasInstallerRun(false);
+        $entityManager->persist($application);
+        $entityManager->flush();
 
         return $this->render('dashboard/page/application/installation.html.twig', [
             'application' => $application,

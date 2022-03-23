@@ -7,6 +7,7 @@ use App\Entity\Order;
 use App\Form\CreateOrderType;
 use App\Form\RealizeOrderType;
 use App\Repository\OrderRepository;
+use App\Service\MailerService;
 use App\Service\RandomCouponGenerator;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
@@ -59,8 +60,12 @@ class OrderController extends AbstractController
     /**
      * @Route("/dashboard/order/create", name="app_order_create")
      */
-    public function generateOrder(Request $request, RandomCouponGenerator $couponGenerator, EntityManagerInterface $entityManager): Response
-    {
+    public function generateOrder(
+        Request $request,
+        RandomCouponGenerator $couponGenerator,
+        EntityManagerInterface $entityManager,
+        MailerService $mailerService
+    ): Response {
         if (!$this->getUser()->getAddress()) {
             $this->addFlash('error', 'Dane adresowe są wymagany w celu złożenia zamówienia.');
 
@@ -77,9 +82,10 @@ class OrderController extends AbstractController
             $entityManager->persist($order);
             $entityManager->flush();
 
+            $mailerService->sendCoupon($this->getUser(), $order->getCoupon());
             //ToDo: add payment mechanism here
             return $this->render('dashboard/page/order/orderConfirmation.html.twig', [
-                'order' => $order
+                'order' => $order,
             ]);
         }
 
@@ -95,7 +101,7 @@ class OrderController extends AbstractController
     public function adminOrderList(OrderRepository $repository): Response
     {
         return $this->render('dashboard/page/admin/order/list.html.twig', [
-            'orders' => $repository->findAll()
+            'orders' => $repository->findAll(),
         ]);
     }
 
@@ -107,6 +113,7 @@ class OrderController extends AbstractController
         $order->setIsActive(!$order->getIsActive());
         $manager->persist($order);
         $manager->flush();
+
         return $this->redirectToRoute('app_admin_order_list');
     }
 
@@ -117,6 +124,7 @@ class OrderController extends AbstractController
     {
         $manager->remove($order);
         $manager->flush();
+
         return $this->redirectToRoute('app_admin_order_list');
     }
 }
