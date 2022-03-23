@@ -1,0 +1,51 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">List dostępnych obszarów roboczych</h1>
+        <div>
+            <a class="btn-danger btn" href="{{ path('app_workspace_create') }}">Dodaj obszar roboczy</a>
+            {% if app.session.get('workspace') is not empty %}
+                <a href="{{ path('app_workspace_check_out') }}" class="btn-danger btn" >Opuść obszar</a>
+            {% endif %}
+        </div>
+    </div>
+
+    {% if workspaceList is empty %}
+        <div class="pt-3 d-flex justify-content-center">
+            <h1 class="h2">
+                Brak dostępnych obszarów roboczych dla twojego konta
+            </h1>
+        </div>
+    {% else %}
+        <div class="table-responsive">
+        <table class="table table-striped table-sm">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Nazwa</th>
+            <th scope="col">Akcje</th>
+        </tr>
+        </thead>
+        <tbody>
+    {% endif %}
+    {% for workspace in workspaceList %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ workspace.name }}</td>
+            <td>
+                {% if app.session.get('workspace') is empty or app.session.get('workspace').id != workspace.id %}
+                    <a href="{{ path('app_workspace_select', {'id': workspace.id}) }}" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Przełącz obszar roboczy"><i class="fas fa-play-circle"></i></a>
+                {% endif %}
+                    <a href="{{ path('app_workspace_user_list', {'id': workspace.id}) }}" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Pokaż listę użytkowników"><i class="fas fa-users"></i></a>
+                {% if workspace.creator == app.user %}
+                    <a href="{{ path('app_workspace_user_add', {'id': workspace.id}) }}" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Dodaj użytkownika do tego obszaru"><i class="fas fa-user-plus"></i></a>
+                {% endif %}
+                {% if workspace.creator != app.user %}
+                    <a href="{{ path('app_workspace_leave', {'id': workspace.id}) }}" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Opuść obszar"><i class="fas fa-running"></i></a>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+{% endblock %}

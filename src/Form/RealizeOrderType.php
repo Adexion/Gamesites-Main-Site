@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class OrderType extends BaseType
+class RealizeOrderType extends BaseType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -25,10 +25,10 @@ class OrderType extends BaseType
                 ],
             ])
             ->add('coupon', TextType::class, [
-                'attr' => ['placeholder' => 'format: GSXXXXXXXXXX'],
+                'attr' => ['placeholder' => 'format: GSXXXXXXXXXXXX'],
                 'constraints' => [
                     new NotBlank(),
-                    new Length(12),
+                    new Length(14),
                     new Order()
                 ],
             ])

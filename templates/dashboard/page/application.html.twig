@@ -5,7 +5,7 @@
         <h1 class="h2">Aktywne aplikacje</h1>
     </div>
 
-    {% if serverList is empty %}
+    {% if userApplicationList is empty %}
         <div class="pt-3 d-flex justify-content-center">
             <h1 class="h2">
                 Brak zainstalowanych aplikacji dla twojego konta
@@ -21,22 +21,25 @@
             <th scope="col">Domena</th>
             <th scope="col">Opłacono do</th>
             <th scope="col">Status</th>
+            <th scope="col">Workspace</th>
             <th scope="col">Akcje</th>
         </tr>
         </thead>
         <tbody>
     {% endif %}
-    {% for server in serverList %}
+    {% for application in userApplicationList %}
         <tr>
             <td>{{ loop.index }}</td>
-            <td>{{ server.name }}</td>
-            <td>{{ server.domain }}</td>
-            <td>{{ server.expiryDate | date('d.m.Y H:i:s') }}</td>
-            <td>{{ server.instalationFinish ? 'Instalacja zakończona' : 'Aplikacja nie zainstalowana'}}</td>
+            <td>{{ application.name }}</td>
+            <td>{{ application.domain }}</td>
+            <td>{{ application.expiryDate | date('d.m.Y H:i:s') }}</td>
+            <td>{{ application.installationFinish ? 'Instalacja zakończona' : 'Aplikacja nie zainstalowana'}}</td>
+            <td>{{ application.workspace ? application.workspace.name : 'Nie przypisana' }}</td>
+
             <td>
                 <a href="#" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Lista faktur"><i class="fas fa-file-pdf"></i></a>
                 <a href="#" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Historia zamówień"><i class="fas fa-shopping-basket"></i></a>
-                <a href="{{ path('app_setting', {'coupon': server.coupon}) }}" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Ustawienia"><i class="fas fa-server"></i></a>
+                <a href="{{ path('app_setting', {'coupon': application.coupon}) }}" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Ustawienia"><i class="fas fa-server"></i></a>
             </td>
         </tr>
     {% endfor %}

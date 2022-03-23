@@ -2,15 +2,15 @@
 
 namespace App\Entity;
 
-use App\Repository\ServerHistoryRepository;
+use App\Repository\ApplicationHistoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass=ServerHistoryRepository::class)
+ * @ORM\Entity(repositoryClass=ApplicationHistoryRepository::class)
  */
-class ServerHistory
+class ApplicationHistory
 {
     /**
      * @ORM\Id
@@ -20,9 +20,9 @@ class ServerHistory
     private $id;
 
     /**
-     * @ORM\OneToMany(targetEntity=Server::class, mappedBy="history")
+     * @ORM\OneToMany(targetEntity=Application::class, mappedBy="history")
      */
-    private $server;
+    private $application;
 
     /**
      * @ORM\Column(type="datetime")
@@ -41,7 +41,7 @@ class ServerHistory
 
     public function __construct()
     {
-        $this->server = new ArrayCollection();
+        $this->application = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -50,29 +50,28 @@ class ServerHistory
     }
 
     /**
-     * @return Collection|Server[]
+     * @return Collection|Application[]
      */
-    public function getServer(): Collection
+    public function getApplication(): Collection
     {
-        return $this->server;
+        return $this->application;
     }
 
-    public function addServer(Server $server): self
+    public function addApplication(Application $application): self
     {
-        if (!$this->server->contains($server)) {
-            $this->server[] = $server;
-            $server->setHistory($this);
+        if (!$this->application->contains($application)) {
+            $this->application[] = $application;
+            $application->setHistory($this);
         }
 
         return $this;
     }
 
-    public function removeServer(Server $server): self
+    public function removeApplication(Application $application): self
     {
-        if ($this->server->removeElement($server)) {
-            // set the owning side to null (unless already changed)
-            if ($server->getHistory() === $this) {
-                $server->setHistory(null);
+        if ($this->application->removeElement($application)) {
+            if ($application->getHistory() === $this) {
+                $application->setHistory(null);
             }
         }
 

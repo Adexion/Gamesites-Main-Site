@@ -5,7 +5,7 @@ namespace App\Controller;
 set_time_limit(0);
 
 use App\Repository\RemoteRepository;
-use App\Repository\ServerRepository;
+use App\Repository\ApplicationRepository;
 use App\Service\DomainService;
 use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,19 +15,23 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Process\Process;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ServerAPIController extends AbstractController
+class ApplicationAPIController extends AbstractController
 {
     /**
      * @Route("/v1/setup/initialize", name="app_api_initial")
-     * @throws ORMException
      */
-    public function initialize(Request $request, ServerRepository $serverRepository, EntityManagerInterface $manager): Response
+    public function initialize(Request $request, ApplicationRepository $repository, EntityManagerInterface $manager): Response
     {
         $content = json_decode($request->getContent(), true);
-        $server = $serverRepository->findOneBy(['coupon' => $content['token']]);
+        $application = $repository->findOneBy(['coupon' => $content['token']]);
+
+        if ($application->getInstallationFinish() || $application->getWasInstallerRun()) {
+            throw new NotFoundHttpException();
+        }
 
         $commandList = [
             "cd /var/www/ && git clone git@github.com:Adexion/GameSitesSell.git {{ dir }}",
@@ -41,17 +45,17 @@ class ServerAPIController extends AbstractController
 
         sleep(2);
 
-        $server->setWasInstallerRun(true);
-        $manager->persist($server);
+        $application->setWasInstallerRun(true);
+        $manager->persist($application);
         $manager->flush();
 
-        return $this->runner($commandList, $response, $request, $serverRepository);
+        return $this->runner($commandList, $response, $request, $repository);
     }
 
     /**
      * @Route("/v1/setup/database", name="app_api_database")
      */
-    public function database(Request $request, ServerRepository $serverRepository): Response
+    public function database(Request $request, ApplicationRepository $repository): Response
     {
         $commandList = [
             "sudo -S mysql -e \"DROP DATABASE {{ dir }}\"",
@@ -65,14 +69,14 @@ class ServerAPIController extends AbstractController
 
         sleep(2);
 
-        return $this->runner($commandList, $response, $request, $serverRepository);
+        return $this->runner($commandList, $response, $request, $repository);
     }
 
     /**
      * @Route("/v1/setup/install", name="app_api_install")
      * @throws Exception
      */
-    public function install(Request $request, ServerRepository $serverRepository): Response
+    public function install(Request $request, ApplicationRepository $applicationRepository): Response
     {
         $commandList = [
             "cd /var/www/{{ dir }} && sudo -S composer install",
@@ -81,16 +85,16 @@ class ServerAPIController extends AbstractController
         ];
 
         $content = json_decode($request->getContent(), true);
-        $server = $serverRepository->findOneBy(['coupon' => $content['token']]);
+        $application = $applicationRepository->findOneBy(['coupon' => $content['token']]);
 
         $response = [
             'title' => 'Budowanie pakietów webowych (To może chwilę potrwać) ...',
             'percentage' => 50,
         ];
 
-        $response = $this->runner($commandList, $response, $request, $serverRepository);
+        $response = $this->runner($commandList, $response, $request, $applicationRepository);
 
-        $repository = new RemoteRepository($server->getDir());
+        $repository = new RemoteRepository($application->getDir());
         $repository->insertUsers($this->getUser());
 
         return $response;
@@ -99,7 +103,7 @@ class ServerAPIController extends AbstractController
     /**
      * @Route("/v1/setup/webpack", name="app_api_webpack")
      */
-    public function webpack(Request $request, ServerRepository $serverRepository): Response
+    public function webpack(Request $request, ApplicationRepository $applicationRepository): Response
     {
         $commandList = [
             "cd /var/www/{{ dir }} && sudo -S chmod 777 var -R",
@@ -113,19 +117,20 @@ class ServerAPIController extends AbstractController
             'percentage' => 70,
         ];
 
-        return $this->runner($commandList, $response, $request, $serverRepository);
+        return $this->runner($commandList, $response, $request, $applicationRepository);
     }
 
     /**
      * @Route("/v1/setup/domain", name="app_api_domain")
      */
-    public function domain(Request $request, ServerRepository $serverRepository): Response
+    public function domain(Request $request, ApplicationRepository $repository): Response
     {
         $commandList = [
             "sudo -S rm /etc/nginx/sites-available/{{ dir }}.conf",
             "sudo -S printf '{{ string }}' >> /etc/nginx/sites-available/{{ dir }}.conf",
             "sudo -S ln -s /etc/nginx/sites-available/{{ dir }}.conf /etc/nginx/sites-enabled/{{ dir }}.conf &> /dev/null",
             "sudo -S certbot --nginx -d {{ domain }} -d www.{{ domain }}  --redirect -n &> /dev/null",
+            "cd /var/www/{{ dir }} && sudo -S bin/console assets:install public",
         ];
 
         $response = [
@@ -133,25 +138,25 @@ class ServerAPIController extends AbstractController
             'percentage' => 95,
         ];
 
-        return $this->runner($commandList, $response, $request, $serverRepository);
+        return $this->runner($commandList, $response, $request, $repository);
     }
 
     /**
      * @Route("/v1/setup/configure", name="app_api_configure")
      * @throws ORMException|Exception
      */
-    public function configure(Request $request, ServerRepository $serverRepository, EntityManagerInterface $manager): Response
+    public function configure(Request $request, ApplicationRepository $applicationRepository, EntityManagerInterface $manager): Response
     {
         $content = json_decode($request->getContent(), true);
-        $server = $serverRepository->findOneBy(['coupon' => $content['token']]);
+        $application = $applicationRepository->findOneBy(['coupon' => $content['token']]);
 
-        $repository = new RemoteRepository($server->getDir());
-        $repository->insertConfiguration($server);
+        $repository = new RemoteRepository($application->getDir());
+        $repository->insertConfiguration($application);
 
         sleep(2);
 
-        $server->setInstalationFinish(true);
-        $manager->persist($server);
+        $application->setInstallationFinish(true);
+        $manager->persist($application);
         $manager->flush();
 
         return new JsonResponse([
@@ -161,17 +166,17 @@ class ServerAPIController extends AbstractController
         ]);
     }
 
-    private function runner(array $commandList, array $response, Request $request, ServerRepository $serverRepository): JsonResponse
+    private function runner(array $commandList, array $response, Request $request, ApplicationRepository $repository): JsonResponse
     {
         $content = json_decode($request->getContent(), true);
-        $server = $serverRepository->findOneBy(['coupon' => $content['token']]);
+        $application = $repository->findOneBy(['coupon' => $content['token']]);
 
         $logs = new stdClass();
         $logs->err = [];
         foreach ($commandList as $command) {
             $replaced = str_replace(
                 ['{{ dir }}', '{{ string }}', '{{ domain }}'],
-                [$server->getDir(), DomainService::getFileContent($server->getDomain(), $server->getDir()), $server->getDomain()],
+                [$application->getDir(), DomainService::getFileContent($application->getDomain(), $application->getDir()), $application->getDomain()],
                 $command
             );
 

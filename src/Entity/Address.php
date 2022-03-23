@@ -23,11 +23,6 @@ class Address
     private $name;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $surname;
-
-    /**
      * @ORM\Column(type="string", length=25)
      */
     private $nickname;
@@ -63,7 +58,7 @@ class Address
     private $postCode;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="bigint", nullable=true)
      */
     private $tin;
 
@@ -80,18 +75,6 @@ class Address
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getSurname(): ?string
-    {
-        return $this->surname;
-    }
-
-    public function setSurname(string $surname): self
-    {
-        $this->surname = $surname;
 
         return $this;
     }

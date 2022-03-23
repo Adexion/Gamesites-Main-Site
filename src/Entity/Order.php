@@ -24,7 +24,7 @@ class Order
     private $coupon;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="string")
      */
     private $expiryDate;
 
@@ -32,6 +32,11 @@ class Order
      * @ORM\Column(type="boolean", options={"default": false})
      */
     private $isActive;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default": false})
+     */
+    private $invoice;
 
     public function getId(): ?int
     {
@@ -50,12 +55,12 @@ class Order
         return $this;
     }
 
-    public function getExpiryDate(): ?\DateTimeInterface
+    public function getExpiryDate(): ?string
     {
         return $this->expiryDate;
     }
 
-    public function setExpiryDate(\DateTimeInterface $expiryDate): self
+    public function setExpiryDate(?string $expiryDate): self
     {
         $this->expiryDate = $expiryDate;
 
@@ -72,5 +77,17 @@ class Order
         $this->isActive = $isActive;
 
         return $this;
+    }
+
+    public function setInvoice(?bool $invoice): self
+    {
+        $this->invoice = $invoice;
+
+        return $this;
+    }
+
+    public function getInvoice(): ?bool
+    {
+        return $this->invoice;
     }
 }

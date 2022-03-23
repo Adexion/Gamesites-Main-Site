@@ -13,7 +13,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
- * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
+ * @UniqueEntity(fields={"email"}, message="Konto o podanym adresie email już istnieje.")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -41,9 +41,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $password;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Server::class, inversedBy="client")
+     * @ORM\ManyToMany(targetEntity=Application::class, inversedBy="client")
      */
-    private $server;
+    private $application;
 
     /**
      * @ORM\OneToOne(targetEntity=Address::class, inversedBy="client", cascade={"persist", "remove"})
@@ -66,10 +66,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $invoice;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Workspace::class, inversedBy="users")
+     */
+    private $workspace;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default": false})
+     */
+    private $forceChangePassword = false;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Ticket::class, mappedBy="creator")
+     */
+    private $tickets;
+
     public function __construct()
     {
-        $this->server = new ArrayCollection();
+        $this->application = new ArrayCollection();
         $this->invoice = new ArrayCollection();
+        $this->workspace = new ArrayCollection();
+        $this->tickets = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -118,30 +135,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(?string $password): self
     {
+        if (!$password) {
+            return $this;
+        }
+
         $this->password = $password;
 
         return $this;
     }
 
-    public function getServer(): Collection
+    public function getApplication(): Collection
     {
-        return $this->server;
+        return $this->application;
     }
 
-    public function addServer(Server $server): self
+    public function addApplication(Application $application): self
     {
-        if (!$this->server->contains($server)) {
-            $this->server[] = $server;
+        if (!$this->application->contains($application)) {
+            $this->application[] = $application;
         }
 
         return $this;
     }
 
-    public function removeServer(Server $server): self
+    public function removeApplication(Application $application): self
     {
-        $this->server->removeElement($server);
+        $this->application->removeElement($application);
 
         return $this;
     }
@@ -182,6 +203,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function eraseCredentials()
     {
+
     }
 
     public function getToken(): ?string
@@ -217,9 +239,74 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeInvoice(Invoice $invoice): self
     {
         if ($this->invoice->removeElement($invoice)) {
-            // set the owning side to null (unless already changed)
             if ($invoice->getClient() === $this) {
                 $invoice->setClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Workspace[]
+     */
+    public function getWorkspace(): Collection
+    {
+        return $this->workspace;
+    }
+
+    public function addWorkspace(Workspace $workspace): self
+    {
+        if (!$this->workspace->contains($workspace)) {
+            $this->workspace[] = $workspace;
+        }
+
+        return $this;
+    }
+
+    public function removeWorkspace(Workspace $workspace): self
+    {
+        $this->workspace->removeElement($workspace);
+
+        return $this;
+    }
+
+    public function getForceChangePassword(): ?bool
+    {
+        return $this->forceChangePassword;
+    }
+
+    public function setForceChangePassword(?bool $forceChangePassword): self
+    {
+        $this->forceChangePassword = $forceChangePassword;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Ticket[]
+     */
+    public function getTickets(): Collection
+    {
+        return $this->tickets;
+    }
+
+    public function addTicket(Ticket $ticket): self
+    {
+        if (!$this->tickets->contains($ticket)) {
+            $this->tickets[] = $ticket;
+            $ticket->setCreator($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTicket(Ticket $ticket): self
+    {
+        if ($this->tickets->removeElement($ticket)) {
+            // set the owning side to null (unless already changed)
+            if ($ticket->getCreator() === $this) {
+                $ticket->setCreator(null);
             }
         }
 

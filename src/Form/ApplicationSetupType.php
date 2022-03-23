@@ -2,7 +2,7 @@
 
 namespace App\Form;
 
-use App\Entity\Server;
+use App\Entity\Application;
 use App\Form\Constraint\Unique;
 use Symfony\Component\Form\Extension\Core\Type\BaseType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -11,7 +11,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
-class SetupType extends BaseType
+class ApplicationSetupType extends BaseType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -21,8 +21,8 @@ class SetupType extends BaseType
                     new NotBlank(),
                     new Unique(
                         [
-                            'message' => 'Serwer o tej nazwie został juz utworzony. Jeżeli jesteś jego właścicielem skontaktuj się z supportem.',
-                            'class' => Server::class,
+                            'message' => 'Aplikacja o tej nazwie został juz utworzony. Jeżeli jesteś jego właścicielem skontaktuj się z supportem.',
+                            'class' => Application::class,
                             'field' => 'name',
                         ]
                     ),

@@ -1,0 +1,22 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+    <div class="h-100 d-flex justify-content-center align-items-center">
+        <div class="w-50">
+            <div class="d-flex justify-content-center pb-3"><h1>Potwierdzenie złożenia zamówienia</h1></div>
+            <div class="d-flex justify-content-center align-items-center flex-column">
+                <p>Dziękujemy za złożenie zamówienia.</p>
+                <p>Twój kupon to:</p>
+                <b class="h3">{{ order.coupon }}</b><br/>
+                {% if not order.isActive %}
+                    <p>Zostanie on uaktywniony po opłaceniu zamówienia.</p>
+                    <p>Skontaktuj się z supportem w celu dokonania płatności.</p>
+                {% else %}
+                    <p>Serwer jest już aktywy, na płatność czekamy do 5 dni roboczych.</p>
+                    <p>W celu pobrania faktury skontaktuj się z supportem.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

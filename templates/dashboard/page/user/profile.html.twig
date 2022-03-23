@@ -1,0 +1,43 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            {{ form_start(form) }}
+            <div class="d-flex justify-content-between flex-wrap">
+                <div class="col-xl-6 col-12 pt-3">
+                    <p class="h3 mb-4">Główne dane dostępowe</p>
+                    {{ form_row(form.email) }}
+                    {{ form_row(form.password) }}
+                    {{ form_row(form.each) }}
+                    {{ form_row(form.enable) }}
+                    {{ form_row(form.submit) }}
+
+                    {% for message in app.flashes('success') %}
+                        <div class="alert-success alert w-100 alert-dismissible fade  show">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                    {% for message in app.flashes('error') %}
+                        <div class="alert-danger alert w-100 alert-dismissible fade  show">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                </div>
+                <div class="col-xl-5 col-12">
+                    <button class="btn btn-danger mb-4 d-xl-none d-block" type="button" data-bs-toggle="collapse" data-bs-target="#collapse" aria-expanded="false" aria-controls="collapse">
+                        Przełącz dane adresowe
+                    </button>
+
+                    <div class="border-color mb-3 d-xl-block collapse" id="collapse">
+                        <p class="h3 mb-4">Dane adresowe</p>
+                        {{ form_widget(form.address) }}
+                    </div>
+                </div>
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+{% endblock %}

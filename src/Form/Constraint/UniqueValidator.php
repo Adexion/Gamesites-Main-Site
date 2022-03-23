@@ -3,7 +3,7 @@
 namespace App\Form\Constraint;
 
 use Doctrine\Persistence\ManagerRegistry;
-use http\Exception\RuntimeException;
+use RuntimeException;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -24,6 +24,10 @@ class UniqueValidator extends ConstraintValidator
         }
         if (!$constraint->class) {
             throw new RuntimeException("Field class is not correct set");
+        }
+
+        if (isset($constraint->skip) && $value === $constraint->skip) {
+            return;
         }
 
         if (!empty($this->registry->getRepository($constraint->class)->findBy([$constraint->field => $value]))) {

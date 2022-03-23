@@ -1,5 +1,30 @@
 Domain: Domena
 Coupon: Kod zamówienia
-Name: Nazwa serwera
+Name: Nazwa
 Create order: Przejdź do konfiguracji
 Configure: Rozpocznij instalacje
+Workspace: Obszar roboczy
+
+Password: Hasło
+Repeat Password: Powtórz hasło
+Submit: Zapisz
+Each: Czy zmienić hasło dla wszystkich twoich aplikacji?
+Enable: Usuń moje konto wraz z wszystkimi danymi (RODO)
+
+Name or Company name: Imie i nazwisko bądź nazwa firmy (z CEIDG)
+Nickname: Nazwa konta
+Street: Ulica
+House number: Numer domu
+Apartment number: Numer mieszkania
+City: Miasto
+Post code: Kod pocztowy
+Tin: NIP
+
+Invoice: Wystaw fakturę za zamówienie
+
+Title: Tytuł
+Type: Typ
+Description: Opis
+Message: Wiadomość
+
+pending: Nie odpowiedziano

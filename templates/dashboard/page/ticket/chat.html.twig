@@ -1,0 +1,43 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+    <div class="mb-3 message-title top-0 position-fixed col-lg-10 col-md-9 col-12 position-relative">
+        Temat: <span>{{ ticket.title }}</span>, Typ: <span>{{ ticket.type }}</span>
+        <a class="btn btn-danger ticket-btn" href="{{ path('app_ticket_close', {'id': ticket.id}) }}">Zamknij zgłoszenie</a>
+    </div>
+
+    <div class="position-relative w-100 mt-5">
+        <div class="messages h-100">
+            <div class="form-control comment {% if ticket.creator != app.user %}comment-reply{% endif %}">
+                <div class="comment-body">
+                    <p class="comment-text">{{ ticket.description | nl2br }}</p>
+                    <div class="comment-footer">
+                        <span class="comment-meta">{{ ticket.creator.address ? ticket.creator.address.name : ticket.creator.userIdentifier }}</span>
+                    </div>
+                </div>
+            </div>
+
+            {% for message in ticket.ticketMessages %}
+                <div class="form-control comment {% if message.creator != app.user %}comment-reply{% endif %}">
+                    <div class="comment-body">
+                        <p class="comment-text">{{ message.message | nl2br }}</p>
+                        <div class="comment-footer">
+                            <span class="comment-meta">{{ message.creator.address ? message.creator.address.name : message.creator.userIdentifier }}</span>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="bottom-0 py-4 position-sticky bg-white {{ ticket.status == 'closed' ? 'd-none' : '' }}">
+            {{ form_start(form, {'attr': {'class': 'd-flex justify-content-center w-100 align-items-center'}}) }}
+            <div class="input-group">
+                {{ form_widget(form.message, {'attr': {'placeholder': 'Wpisz wiadomość tutaj ...'}}) }}
+                {{ form_widget(form.submit,  {'attr': {'class': 'btn btn-danger '}}) }}
+            </div>
+            {{ form_end(form) }}
+        </div>
+    </div>
+
+{% endblock %}
+
