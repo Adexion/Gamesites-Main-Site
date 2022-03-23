@@ -125,6 +125,7 @@ class ApplicationAPIController extends AbstractController
             "sudo -S printf '{{ string }}' >> /etc/nginx/sites-available/{{ dir }}.conf",
             "sudo -S ln -s /etc/nginx/sites-available/{{ dir }}.conf /etc/nginx/sites-enabled/{{ dir }}.conf &> /dev/null",
             "sudo -S certbot --nginx -d {{ domain }} -d www.{{ domain }}  --redirect -n &> /dev/null",
+            "cd /var/www/{{ dir }} && sudo -S bin/console assets:install public",
         ];
 
         $response = [
