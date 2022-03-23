@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Ticket;
 use App\Entity\TicketMessage;
+use App\Enum\TicketStatusEnum;
 use App\Form\TicketMessageType;
 use App\Form\TicketType;
 use App\Repository\TicketRepository;
@@ -22,7 +23,7 @@ class TicketController extends AbstractController
     public function list(TicketRepository $repository): Response
     {
         return $this->render('dashboard/page/ticket/list.html.twig', [
-            'tickets' => $repository->findBy(['creator' => $this->getUser()])
+            'tickets' => $repository->findBy(['creator' => $this->getUser()]),
         ]);
     }
 
@@ -37,7 +38,7 @@ class TicketController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $ticket->setCreator($this->getUser());
-            $ticket->setStatus('pending');
+            $ticket->setStatus(TicketStatusEnum::PENDING);
             $manager->persist($ticket);
             $manager->flush();
 
@@ -45,14 +46,18 @@ class TicketController extends AbstractController
         }
 
         return $this->render('dashboard/page/ticket/create.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 
     /**
      * @Route("/dashboard/ticket/chat/{id}")
      */
-    public function chat(Ticket $ticket, Request $request, EntityManagerInterface $manager) {
+    public function chat(Ticket $ticket, Request $request, EntityManagerInterface $manager): Response
+    {
+        if (!$this->isGranted('ROLE_ADMIN') && $ticket->getCreator() !== $this->getUser()) {
+            return $this->redirectToRoute('app_ticket_list');
+        }
 
         $message = new TicketMessage();
         $form = $this->createForm(TicketMessageType::class, $message);
@@ -69,7 +74,7 @@ class TicketController extends AbstractController
 
         return $this->render('dashboard/page/ticket/chat.html.twig', [
             'ticket' => $ticket,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 
@@ -79,7 +84,7 @@ class TicketController extends AbstractController
     public function adminList(TicketRepository $repository): Response
     {
         return $this->render('dashboard/page/admin/ticket/list.html.twig', [
-            'tickets' => $repository->findAll()
+            'tickets' => $repository->findAll(),
         ]);
     }
 }

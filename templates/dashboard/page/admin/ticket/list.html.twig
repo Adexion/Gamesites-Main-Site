@@ -35,7 +35,7 @@
             <td>{{ ticket.creator.username }}</td>
             <td>{{ ticket.title }}</td>
             <td>{{ ticket.type }}</td>
-            <td>{{ ticket.status }}</td>
+            <td>{{ ticket.status | trans }}</td>
             <td>
                 <a href="{{ path('app_ticket_chat', {'id': ticket.id}) }}" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Przejdź do wątku"><i class="fas fa-play-circle"></i></a>
             </td>
