@@ -72,4 +72,14 @@ class TicketController extends AbstractController
             'form' => $form->createView()
         ]);
     }
+
+    /**
+     * @Route("/admin/ticket/list", name="app_admin_ticket_list")
+     */
+    public function adminList(TicketRepository $repository): Response
+    {
+        return $this->render('dashboard/page/admin/ticket/list.html.twig', [
+            'tickets' => $repository->findAll()
+        ]);
+    }
 }
