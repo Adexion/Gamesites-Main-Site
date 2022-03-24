@@ -1,15 +1,12 @@
 <header class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0 shadow">
     <a class="navbar-brand col-md-3 col-lg-2 me-0 px-3" href="{{ path('app_application_list') }}">Gamesites</a>
     <div class="d-flex">
-        <div class="navbar-nav">
+        <div class="navbar-nav flex-row">
             <div class="nav-item text-nowrap dropdown">
                 <a class="nav-link dropdown-toggle me-md-4 me-3" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    {% set hello = 'now' | date('H') > 06 and 'now' | date('H') < 19 ? 'Dzień dobry,' : 'Dobry wieczór,' %}
-
-                    {{ hello }} {{ app.user.address.nickname ?? app.user.userIdentifier }}!&nbsp;&nbsp;
+                    <i class="fa fa-user"></i>
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item mb-3" href="{{ path('app_workspace_list') }}">Obszar:&nbsp;{{ app.session.get('workspace') ?  app.session.get('workspace').name : 'Nie wybrano' }}</a></li>
                     <li><a class="dropdown-item" href="{{ path('app_profile') }}">Profil</a></li>
                     <li>
                         <hr class="dropdown-divider">
@@ -18,6 +15,18 @@
                         <a class="dropdown-item" href="{{ path('app_logout') }}">Wyloguj się</a>
                     </li>
                 </ul>
+            </div>
+            <div class="nav-item text-nowrap dropdown">
+                <a class="nav-link dropdown-toggle me-md-4 me-3" href="#" id="notificationDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fa fa-bell"></i>
+                </a>
+                <ul id="notification" class="dropdown-menu" aria-labelledby="notificationDropdown">
+                </ul>
+            </div>
+            <div class="nav-item text-nowrap">
+                <a class="nav-link me-md-4 me-3" href="{{ path('app_workspace_list') }}">
+                    Obszar:&nbsp;{{ app.session.get('workspace') ?  app.session.get('workspace').name : 'Nie wybrano' }}
+                </a>
             </div>
         </div>
         <button class="navbar-toggler d-md-none collapsed me-2" type="button" data-bs-toggle="collapse"

@@ -5,7 +5,8 @@
         </h6>
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link {% if app.request.get('_route') == 'app_application_list' %}active{% endif %}" aria-current="page" href="{{ path('app_application_list') }}">
+                <a class="nav-link {% if app.request.get('_route') == 'app_application_list' %}active{% endif %}"
+                   aria-current="page" href="{{ path('app_application_list') }}">
                     <i class="fas fa-desktop feather"></i>
                     Aplikacje
                 </a>
@@ -17,13 +18,15 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {% if app.request.get('_route') == 'app_order_realize' %}active{% endif %}" href="{{ path('app_order_realize') }}">
+                <a class="nav-link {% if app.request.get('_route') == 'app_order_realize' %}active{% endif %}"
+                   href="{{ path('app_order_realize') }}">
                     <i class="fas fa-tasks feather"></i>
                     Realizacja zamówienia
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {% if app.request.get('_route') == 'app_order_create' %}active{% endif %}" href="{{ path('app_order_create') }}">
+                <a class="nav-link {% if app.request.get('_route') == 'app_order_create' %}active{% endif %}"
+                   href="{{ path('app_order_create') }}">
                     <i class="fas fa-shopping-basket feather"></i>
                     Zamów
                 </a>
@@ -43,24 +46,29 @@
         </ul>
 
         {% if is_granted('ROLE_ADMIN') %}
-
-        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-            <span>Gamesites Admin Panel</span>
-        </h6>
-        <ul class="nav flex-column mb-2">
-            <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_admin_order_list') }}">
-                    <i class="fas fa-shopping-basket feather"></i>
-                    Zamówienia
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="{{ path('app_admin_ticket_list') }}">
-                    <i class="fas fa-ticket-alt feather"></i>
-                    Support
-                </a>
-            </li>
-        </ul>
+            <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                <span>Gamesites Admin Panel</span>
+            </h6>
+            <ul class="nav flex-column mb-2">
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_admin_order_list') }}">
+                        <i class="fas fa-shopping-basket feather"></i>
+                        Zamówienia
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_admin_ticket_list') }}">
+                        <i class="fas fa-ticket-alt feather"></i>
+                        Support
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_admin_notification_list') }}">
+                        <i class="fas fa-bell feather"></i>
+                        Powiadomienia
+                    </a>
+                </li>
+            </ul>
         {% endif %}
     </div>
 </nav>

@@ -1,0 +1,19 @@
+{% extends 'security/base.html.twig' %}
+
+{% block body %}
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="d-flex flex-column justify-content-center align-items-center w-50 container">
+            <div>
+                <p>Dzień dobry!</p><br/>
+                <p>Pragniemy poinformować cię, że:</p><br/>
+               {{ notification }}
+            </div>
+        </div>
+
+        <div class="vh-100 w-50 gradient d-flex flex-column justify-content-center align-items-center">
+            <div class="gradient-image"></div>
+            <h1>GameSites</h1>
+            <h2>The true power of gaming...</h2>
+        </div>
+    </div>
+{% endblock %}

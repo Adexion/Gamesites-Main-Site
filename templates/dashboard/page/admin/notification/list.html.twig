@@ -1,0 +1,41 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Lista Powiadomień</h1>
+        <div>
+            <a class="btn-danger btn" href="{{ path('app_admin_notification_add') }}">Utwórz powiadomienie</a>
+        </div>
+    </div>
+
+    {% if notifications is empty %}
+        <div class="pt-3 d-flex justify-content-center">
+            <h1 class="h2">
+                Brak powiadomień
+            </h1>
+        </div>
+    {% else %}
+        <div class="table-responsive">
+        <table class="table table-striped table-sm">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Tytuł</th>
+            <th scope="col">Treść</th>
+            <th scope="col">Czy wysłano na email?</th>
+            <th scope="col">Data dodania</th>
+        </tr>
+        </thead>
+        <tbody>
+    {% endif %}
+    {% for notification in notifications %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ notification.title }}</td>
+            <td>{{ notification.text }}</td>
+            <td>{{ notification.isEmail ? 'Tak' : 'Nie' }}</td>
+            <td>{{ notification.datetime | date('d.m.Y H:i') }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+{% endblock %}

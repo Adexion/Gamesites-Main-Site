@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Notification;
 use App\Entity\Order;
 use App\Entity\User;
 use App\Entity\Workspace;
@@ -60,6 +61,21 @@ class MailerService
             ->subject('Potwierdzenie Email - Gamesites.pl')
             ->htmlTemplate("security/email/coupon.html.twig")
             ->context(['user' => $user, 'coupon' => $coupon]);
+
+        $this->mailer->send($email);
+    }
+
+
+    public function sendNotification(Notification $notification)
+    {
+        $emails = array_map(fn(User $user) => $user->getEmail(), $notification->getUsers()->toArray());
+
+        $email = (new TemplatedEmail())
+            ->from($this->mail)
+            ->addBcc(...$emails)
+            ->subject($notification->getTitle() . ' - Gamesites.pl')
+            ->htmlTemplate("security/email/notification.html.twig")
+            ->context(['notification' => $notification->getText()]);
 
         $this->mailer->send($email);
     }

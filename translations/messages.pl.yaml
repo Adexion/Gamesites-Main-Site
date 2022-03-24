@@ -28,3 +28,6 @@ Description: Opis
 Message: Wiadomość
 
 pending: Nie odpowiedziano
+
+Text: Treść
+Is email: Czy wysłać powiadomienie mailem?
