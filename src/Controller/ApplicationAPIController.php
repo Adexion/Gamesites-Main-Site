@@ -4,6 +4,7 @@ namespace App\Controller;
 
 set_time_limit(0);
 
+use App\Enum\StaticEnum;
 use App\Repository\RemoteRepository;
 use App\Repository\ApplicationRepository;
 use App\Service\DomainService;
@@ -35,7 +36,7 @@ class ApplicationAPIController extends AbstractController
 
         $commandList = [
             "cd /var/www/ && git clone git@github.com:Adexion/GameSitesSell.git {{ dir }}",
-            'echo "APP_ENV=prod \nDATABASE_URL=\"mysql://symfony:8bb725a4w3K*@127.0.0.1:3306/{{ dir }}?serverVersion=5.7\" \nAPP_SECRET=3bb3538a0b014d635d8380564a84e48b" > /var/www/{{ dir }}/.env',
+            'echo "COUPON=' . $application->getCoupon() . ' \nAPP_ENV=prod \nDATABASE_URL=\"mysql://symfony:8bb725a4w3K*@127.0.0.1:3306/{{ dir }}?serverVersion=5.7\" \nAPP_SECRET=3bb3538a0b014d635d8380564a84e48b" > /var/www/{{ dir }}/.env',
         ];
 
         $response = [
@@ -164,6 +165,21 @@ class ApplicationAPIController extends AbstractController
             'percentage' => 100,
             'style' => 'success',
         ]);
+    }
+
+    /**
+     * @Route("/v1/application/information/{coupon}", name="app_api_aplication_information")
+     */
+    public function getCouponInformation(string $coupon, ApplicationRepository $applicationRepository): Response
+    {
+       if (!$app = $applicationRepository->findOneBy(['coupon' => $coupon])) {
+           return new Response(null, Response::HTTP_NOT_FOUND);
+       }
+
+       return new JsonResponse([
+           'expireDate' => $app->getExpiryDate()->format('Y-m-d'),
+           'turnOffDate' => $app->getExpiryDate()->modify('+' . StaticEnum::TURN_OFF . ' days')->format('Y-m-d')
+       ]);
     }
 
     private function runner(array $commandList, array $response, Request $request, ApplicationRepository $repository): JsonResponse

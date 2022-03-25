@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Entity\Application;
 use App\Entity\Notification;
+use App\Enum\StaticEnum;
 use App\Repository\ApplicationRepository;
 use App\Service\MailerService;
 use DateTime;
@@ -62,7 +63,7 @@ class SubscriptionNotificationCommand extends Command
     {
         /** @var Application $application */
         foreach ($group as $application) {
-            $limitWorking = $days + 6;
+            $limitWorking = $days + StaticEnum::TURN_OFF + 1;
 
             $notification = (new Notification())
                 ->addUser($application->getCreator())
