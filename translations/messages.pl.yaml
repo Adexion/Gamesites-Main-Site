@@ -20,7 +20,7 @@ City: Miasto
 Post code: Kod pocztowy
 Tin: NIP
 
-Invoice: Wystaw fakturę za zamówienie
+Invoice: Wystaw fakturę za zamówienie.
 
 Title: Tytuł
 Type: Typ
@@ -31,3 +31,4 @@ pending: Nie odpowiedziano
 
 Text: Treść
 Is email: Czy wysłać powiadomienie mailem?
+Payment notification: Powiadom mnie gdy aplikacaj będzie aktywna.
