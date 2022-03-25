@@ -14,7 +14,7 @@ function buildNotification(value) {
     const div = document.createElement('div');
     const title = document.createElement('div');
     const text = document.createElement('div');
-    const date = document.createElement('p');
+    const date = document.createElement('span');
 
     title.innerText = value['title'];
     title.classList.add('fw-bold');
