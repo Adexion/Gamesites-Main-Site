@@ -6,6 +6,7 @@ use App\Repository\NotificationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=NotificationRepository::class)
@@ -103,7 +104,7 @@ class Notification
         return $this->users;
     }
 
-    public function addUser(User $user): self
+    public function addUser(UserInterface $user): self
     {
         if (!$this->users->contains($user)) {
             $this->users[] = $user;

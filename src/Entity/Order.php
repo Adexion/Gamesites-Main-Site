@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\OrderRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=OrderRepository::class)
@@ -37,6 +38,16 @@ class Order
      * @ORM\Column(type="boolean", options={"default": false})
      */
     private $invoice;
+
+    /**
+     * @ORM\Column(type="boolean", options={"default": false})
+     */
+    private $paymentNotification;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class)
+     */
+    private $creator;
 
     public function getId(): ?int
     {
@@ -89,5 +100,29 @@ class Order
     public function getInvoice(): ?bool
     {
         return $this->invoice;
+    }
+
+    public function getPaymentNotification(): ?bool
+    {
+        return $this->paymentNotification;
+    }
+
+    public function setPaymentNotification(bool $paymentNotification): self
+    {
+        $this->paymentNotification = $paymentNotification;
+
+        return $this;
+    }
+
+    public function getCreator(): ?User
+    {
+        return $this->creator;
+    }
+
+    public function setCreator(?UserInterface $creator): self
+    {
+        $this->creator = $creator;
+
+        return $this;
     }
 }

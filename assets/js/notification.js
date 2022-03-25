@@ -8,6 +8,8 @@ module.exports = () => {
         })
 }
 
+global.notificationCounter = 0;
+
 function buildNotification(value) {
     const div = document.createElement('div');
     const title = document.createElement('div');
@@ -18,7 +20,7 @@ function buildNotification(value) {
     title.classList.add('fw-bold');
     title.classList.add('notification-title');
 
-    text.innerHTML = title.outerHTML + value['text'];
+    text.innerHTML = title.outerHTML + value['text'].replace(/(<([^>]+)>)/gi, "");
     text.classList.add('notification-content');
 
     date.innerText = value['date'];
@@ -29,6 +31,20 @@ function buildNotification(value) {
     div.appendChild(text);
     div.appendChild(date);
     div.classList.add('notification')
+
+    if (value['date'].split('.')[0] === new Date().getDate().toString()) {
+        global.notificationCounter++;
+
+        const dropdown = document.getElementById('notificationDropdown');
+        if (notificationCounter === 1) {
+            global.counter = document.createElement('div');
+            global.counter.classList.add('notification-counter')
+
+            dropdown.appendChild(global.counter);
+        }
+
+        global.counter.innerText = global.notificationCounter;
+    }
 
     return div;
 }

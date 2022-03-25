@@ -32,7 +32,7 @@
             <td>{{ loop.index }}</td>
             <td>{{ application.name }}</td>
             <td>{{ application.domain }}</td>
-            <td>{{ application.expiryDate | date('d.m.Y H:i:s') }}</td>
+            <td>{{ application.expiryDate | date('d.m.Y') }}</td>
             <td>{{ application.installationFinish ? 'Instalacja zakończona' : 'Aplikacja nie zainstalowana'}}</td>
             <td>{{ application.workspace ? application.workspace.name : 'Nie przypisana' }}</td>
 

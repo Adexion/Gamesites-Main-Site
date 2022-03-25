@@ -25,7 +25,7 @@ class ApplicationController extends AbstractController
     {
         $workspace = $requestStack->getSession()->get('workspace');
 
-        return $this->render('dashboard/page/application.html.twig', [
+        return $this->render('dashboard/page/application/list.html.twig', [
             'userApplicationList' => $repository->getCurrentApplications($workspace, $this->getUser()),
         ]);
     }

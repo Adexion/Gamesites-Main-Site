@@ -190,6 +190,7 @@ body {
 }
 
 .notification {
+    position: relative;
     flex-wrap: wrap;
     width: 190px;
     font-size: 12px;
@@ -212,10 +213,26 @@ body {
 
 .notification-date {
     width: 100%;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--search);
 }
 
 .notification-content, .notification-date {
     padding: 0 5px;
+}
+
+.notification-counter {
+    background: #d34040;
+    border-radius: 13px;
+    height: 13px;
+    width: 13px;
+    font-size: 11px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    bottom: 7px;
+    right: 35px;
 }
 
 /*

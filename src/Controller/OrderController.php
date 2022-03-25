@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Application;
+use App\Entity\Notification;
 use App\Entity\Order;
 use App\Form\CreateOrderType;
 use App\Form\RealizeOrderType;
@@ -76,6 +77,7 @@ class OrderController extends AbstractController
         $form = $this->createForm(CreateOrderType::class, $order);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $order->setCreator($this->getUser());
             $order->setCoupon($couponGenerator->generate());
             $order->setIsActive($order->getInvoice() && $this->getUser()->getAddress()->getTin());
 
@@ -108,11 +110,20 @@ class OrderController extends AbstractController
     /**
      * @Route("/admin/order/toggle/{id}", name="app_admin_order_toggle")
      */
-    public function adminOrderToggle(Order $order, EntityManagerInterface $manager): RedirectResponse
+    public function adminOrderToggle(Order $order, EntityManagerInterface $manager, MailerService $service): RedirectResponse
     {
         $order->setIsActive(!$order->getIsActive());
         $manager->persist($order);
         $manager->flush();
+
+        if ($order->getIsActive()) {
+            $notification = (new Notification())
+                ->setText("Twój kupon {$order->getCoupon()} został aktywowany. Możesz teraz założyć aplikacje!")
+                ->setTitle('Potwierdzenie zamówienia')
+                ->addUser($this->getUser());
+
+            $service->sendNotification($notification);
+        }
 
         return $this->redirectToRoute('app_admin_order_list');
     }

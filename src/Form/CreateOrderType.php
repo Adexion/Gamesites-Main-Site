@@ -26,6 +26,7 @@ class CreateOrderType extends BaseType
             ->add('invoice', CheckboxType::class, [
                 'required' => false
             ])
+            ->add('paymentNotification', CheckboxType::class, ['required' => false])
             ->add('submit', SubmitType::class);
     }
 
