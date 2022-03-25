@@ -186,9 +186,12 @@ body {
  */
 
 #notification {
-    display: flex;
     flex-flow: column;
     gap: 10px;
+}
+
+#notification.show {
+    display: flex;
 }
 
 .notification {
