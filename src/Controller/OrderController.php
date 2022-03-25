@@ -85,10 +85,8 @@ class OrderController extends AbstractController
             $entityManager->flush();
 
             $mailerService->sendCoupon($this->getUser(), $order->getCoupon());
-            //ToDo: add payment mechanism here
-            return $this->render('dashboard/page/order/orderConfirmation.html.twig', [
-                'order' => $order,
-            ]);
+
+            return $this->redirectToRoute('app_admin_order_confirmation', ['id' => $order->getId()]);
         }
 
         return $this->render('dashboard/page/order/orderCreate.html.twig', [
@@ -96,6 +94,15 @@ class OrderController extends AbstractController
         ]);
     }
 
+    /**
+     * @Route("/admin/order/confirmation/{id}", name="app_admin_order_confirmation")
+     */
+    public function adminOrderConfirmation(Order $order): Response
+    {
+        return $this->render('dashboard/page/order/orderConfirmation.html.twig', [
+            'order' => $order,
+        ]);
+    }
 
     /**
      * @Route("/admin/order/list", name="app_admin_order_list")
