@@ -18,6 +18,7 @@
         <tr>
             <th scope="col">#</th>
             <th scope="col">Kupon</th>
+            <th scope="col">Użytkownik</th>
             <th scope="col">Aktywny</th>
             <th scope="col">Faktura</th>
             <th scope="col">Akcje</th>
@@ -29,6 +30,7 @@
         <tr>
             <td>{{ loop.index }}</td>
             <td>{{ order.coupon }}</td>
+            <td>{{ order.creator.userIdentifier }}</td>
             <td>{{ order.isActive ? 'Aktywny' : 'Nieaktywny' }}</td>
             <td>{{ order.invoice ? 'Wybrana' : 'Brak' }}</td>
 
