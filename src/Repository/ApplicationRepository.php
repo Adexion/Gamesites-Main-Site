@@ -23,6 +23,7 @@ class ApplicationRepository extends ServiceEntityRepository
         parent::__construct($registry, Application::class);
     }
 
+    /** @throws \Doctrine\DBAL\Exception */
     public function getCurrentApplications(?Workspace $workspace, UserInterface $user): array
     {
         $qb = $this->createQueryBuilder('s')
@@ -37,9 +38,18 @@ class ApplicationRepository extends ServiceEntityRepository
                 ->setParameter(':id', $workspace);
         }
 
-        return $qb
-            ->getQuery()
-            ->execute();
+        return array_map(function (Application $application) use ($user){
+            $remote = new RemoteRepository($application->getDir());
+            $application = $application->toArray();
+
+            try {
+                $application['hasAccount'] = $remote->isUserExist($user->getUserIdentifier());
+            } catch (Exception $e) {
+                $application['hasAccount'] = false;
+            }
+
+            return $application;
+        }, $qb->getQuery()->execute());
     }
 
     public function getUserApplications(UserInterface $user): array

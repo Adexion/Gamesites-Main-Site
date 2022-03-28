@@ -20,6 +20,10 @@
             <div class="col-12 col-lg-5 border-color">
                 <span class="h4">Resetowanie hasła</span>
                 <div class="mt-3">
+                    <div class="mb-3">
+                        <label>Nazwa konta</label>
+                        <input type="email" class="form-control" disabled value="{{ app.user.userIdentifier }}">
+                    </div>
                     {{ form_start(resetPasswordForm) }}
                     {{ form_widget(resetPasswordForm.password) }}
                     {{ form_end(resetPasswordForm) }}

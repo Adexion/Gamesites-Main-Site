@@ -64,4 +64,15 @@ class RemoteRepository
             'email' => $user->getUserIdentifier(),
         ]);
     }
+
+    /** @throws Exception */
+    public function isUserExist(string $email): bool
+    {
+        return (bool)$this->con->createQueryBuilder()
+            ->select('email')
+            ->from('user')
+            ->where('email = :email')
+            ->setParameter(':email', $email)
+            ->fetchOne();
+    }
 }

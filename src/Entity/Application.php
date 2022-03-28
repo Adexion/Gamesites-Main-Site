@@ -244,4 +244,16 @@ class Application
 
         return $this;
     }
+
+    public function toArray(): array
+    {
+        return [
+            'name' => $this->name,
+            'domain' => $this->domain,
+            'expiryDate' => $this->expiryDate,
+            'installationFinish' => $this->installationFinish,
+            'workspace' => $this->workspace,
+            'coupon' => $this->coupon
+        ];
+    }
 }

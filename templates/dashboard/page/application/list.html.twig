@@ -22,6 +22,7 @@
             <th scope="col">Opłacono do</th>
             <th scope="col">Status</th>
             <th scope="col">Workspace</th>
+            <th scope="col">Konto aplikacji</th>
             <th scope="col">Akcje</th>
         </tr>
         </thead>
@@ -33,8 +34,9 @@
             <td>{{ application.name }}</td>
             <td>{{ application.domain }}</td>
             <td>{{ application.expiryDate | date('d.m.Y') }}</td>
-            <td>{{ application.installationFinish ? 'Instalacja zakończona' : 'Aplikacja nie zainstalowana'}}</td>
+            <td>{{ application.installationFinish ? '<span class="text-success">Instalacja zakończona</span>' : '<span class="text-primary">Aplikacja nie zainstalowana</span>'}}</td>
             <td>{{ application.workspace ? application.workspace.name : 'Nie przypisana' }}</td>
+            <td>{{ application.hasAccount ? '<span class="text-success">Utworzone</span>' : '<span class="text-danger">Brak</span>' }}</td>
 
             <td>
                 <a href="#" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Lista faktur"><i class="fas fa-file-pdf"></i></a>
