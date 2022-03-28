@@ -26,11 +26,6 @@ class Workspace
     private $name;
 
     /**
-     * @ORM\OneToOne(targetEntity=Application::class, mappedBy="workspace", cascade={"persist", "remove"})
-     */
-    private $application;
-
-    /**
      * @ORM\ManyToMany(targetEntity=User::class, mappedBy="workspace")
      */
     private $users;
@@ -41,9 +36,15 @@ class Workspace
      */
     private $creator;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Application::class, mappedBy="workspace")
+     */
+    private $application;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
+        $this->application = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -59,27 +60,6 @@ class Workspace
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-
-    public function getApplication(): ?Application
-    {
-        return $this->application;
-    }
-
-    public function setApplication(?Application $application): self
-    {
-        if ($application === null && $this->application !== null) {
-            $this->application->setWorkspace(null);
-        }
-
-        if ($application !== null && $application->getWorkspace() !== $this) {
-            $application->setWorkspace($this);
-        }
-
-        $this->application = $application;
 
         return $this;
     }
@@ -119,6 +99,36 @@ class Workspace
     public function setCreator(?UserInterface $creator): self
     {
         $this->creator = $creator;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Application>
+     */
+    public function getApplication(): Collection
+    {
+        return $this->application;
+    }
+
+    public function addApplication(Application $application): self
+    {
+        if (!$this->application->contains($application)) {
+            $this->application[] = $application;
+            $application->setWorkspace($this);
+        }
+
+        return $this;
+    }
+
+    public function removeApplication(Application $application): self
+    {
+        if ($this->application->removeElement($application)) {
+            // set the owning side to null (unless already changed)
+            if ($application->getWorkspace() === $this) {
+                $application->setWorkspace(null);
+            }
+        }
 
         return $this;
     }

@@ -65,11 +65,6 @@ class Application
     private $installationFinish = false;
 
     /**
-     * @ORM\OneToOne(targetEntity=Workspace::class, inversedBy="application", cascade={"persist", "remove"})
-     */
-    private $workspace;
-
-    /**
      * @ORM\ManyToOne(targetEntity=User::class)
      * @ORM\JoinColumn(nullable=false)
      */
@@ -79,6 +74,11 @@ class Application
      * @ORM\Column(type="boolean", options={"default": false})
      */
     private $invoice = false;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Workspace::class, inversedBy="application")
+     */
+    private $workspace;
 
     public function __construct()
     {
@@ -209,18 +209,6 @@ class Application
         return $this;
     }
 
-    public function getWorkspace(): ?Workspace
-    {
-        return $this->workspace;
-    }
-
-    public function setWorkspace(?Workspace $workspace): self
-    {
-        $this->workspace = $workspace;
-
-        return $this;
-    }
-
     public function getCreator(): ?User
     {
         return $this->creator;
@@ -255,5 +243,17 @@ class Application
             'workspace' => $this->workspace,
             'coupon' => $this->coupon
         ];
+    }
+
+    public function getWorkspace(): ?Workspace
+    {
+        return $this->workspace;
+    }
+
+    public function setWorkspace(?Workspace $workspace): self
+    {
+        $this->workspace = $workspace;
+
+        return $this;
     }
 }
