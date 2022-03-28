@@ -71,7 +71,7 @@ class RemoteRepository
         return (bool)$this->con->createQueryBuilder()
             ->select('email')
             ->from('user')
-            ->where('email = ' . $email .'"')
+            ->where('email = "' . $email .'"')
             ->fetchOne();
     }
 }
