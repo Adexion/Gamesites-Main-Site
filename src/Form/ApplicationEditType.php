@@ -19,19 +19,6 @@ class ApplicationEditType extends BaseType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('name', TextType::class, [
-                'constraints' => [
-                    new Unique(
-                        [
-                            'message' => 'Aplikacja o tej nazwie został juz utworzony. Jeżeli jesteś jego właścicielem skontaktuj się z supportem.',
-                            'class' => Application::class,
-                            'field' => 'name',
-                            'skip' => $options['name']
-                        ]
-                    ),
-                    new Length(['min' => 6, 'max' => 255]),
-                ],
-            ])
             ->add('workspace', EntityType::class, [
                 'placeholder' => '--- Brak ---',
                 'required' => false,
