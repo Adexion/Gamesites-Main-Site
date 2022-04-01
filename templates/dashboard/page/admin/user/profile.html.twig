@@ -1,0 +1,92 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Konto: {{ user.username }}</h1>
+    </div>
+
+    {% for message in app.flashes('success') %}
+        <div class="alert-success alert w-100">{{ message }}</div>
+    {% endfor %}
+
+    <div class="row justify-content-between mb-4">
+        <div class="col-lg-6 col-12">
+            <table class="table table-striped table-sm">
+                <thead>
+                <tr>
+                    <th colspan="2"><p class="h3">Dane konta</p></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="col">E-mail:</th>
+                    <td>{{ user.userIdentifier }}</td>
+                </tr>
+                <tr>
+                    <th scope="col">Typ konta:</th>
+                    <td>{{ user.company ? 'FIRMOWE' : 'OSOBA PRYWATNA' }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-6 col-12">
+            <table class="table table-striped table-sm">
+                <thead>
+                <tr>
+                    <th colspan="2"><p class="h3">Dane adresowe</p></th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th scope="col">Imie i nazwisko:</th>
+                    <td>{{ user.address ? user.address.name : '' }}</td>
+                </tr>
+                <tr>
+                    <th scope="col">Pseudonim:</th>
+                    <td>{{ user.address ? user.address.nickname : '' }}</td>
+                </tr>
+                <tr>
+                    <th scope="col">Ulica:</th>
+                    <td>{{ user.address ? user.address.street : '' }}</td>
+                </tr>
+                <tr>
+                    <th scope="col">Numer domu / Numer mieszkania:</th>
+                    <td>{{ user.address ? user.address.houseNumber ~ (user.address.apartmentNumber ? '/' ~ user.address.apartmentNumber : '') }}</td>
+                </tr>
+                <tr>
+                    <th scope="col">Miasto:</th>
+                    <td>{{ user.address ? user.address.city : ''}}</td>
+                </tr>
+                <tr>
+                    <th scope="col">Kod pocztowy:</th>
+                    <td>{{ user.address ? user.address.postCode : '' }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="row justify-content-end">
+        <div class="col-lg-6 col-12">
+            {% if app.user.company %}
+                <table class="table table-striped table-sm">
+                    <thead>
+                    <tr>
+                        <th colspan="2"><p class="h3">Dane firmy</p></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr>
+                        <th scope="col">Nazwa firmy</th>
+                        <td>{{ user.company ? user.company.name : '' }}</td>
+                    </tr>
+                    <tr>
+                        <th scope="col">NIP:</th>
+                        <td>{{ user.company ? user.company.tin : '' }}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            {% endif %}
+        </div>
+
+    </div>
+{% endblock %}

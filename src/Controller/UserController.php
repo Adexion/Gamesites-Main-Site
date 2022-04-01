@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Company;
 use App\Entity\Agreements;
+use App\Entity\User;
+use App\Repository\UserRepository;
 use Doctrine\DBAL\Exception;
 use App\Form\AgreementsType;
 use App\Form\UserAddressType;
@@ -154,6 +156,26 @@ class UserController extends AbstractController
 
         return $this->render('dashboard/page/user/password.html.twig', [
             'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/admin/user/list", name="app_admin_user_list")
+     */
+    public function userList(UserRepository $repository): Response
+    {
+        return $this->render('dashboard/page/admin/user/list.html.twig', [
+            'users' => $repository->findAll()
+        ]);
+    }
+
+    /**
+     * @Route("/admin/user/details/{id}", name="app_admin_user_details")
+     */
+    public function userDetails(User $user): Response
+    {
+        return $this->render('dashboard/page/admin/user/profile.html.twig', [
+            'user' => $user
         ]);
     }
 }

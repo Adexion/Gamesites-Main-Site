@@ -1,0 +1,46 @@
+{% extends 'dashboard/base.html.twig' %}
+
+{% block body %}
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2">Lista użytkowników</h1>
+    </div>
+
+    {% if users is empty %}
+        <div class="pt-3 d-flex justify-content-center">
+            <h1 class="h2">
+                Brak użytkowników w systemie.
+            </h1>
+        </div>
+    {% else %}
+        <div class="table-responsive">
+        <table class="table table-striped table-sm">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Email</th>
+            <th scope="col">Rola</th>
+            <th scope="col">Status konta</th>
+            <th scope="col">Akcje</th>
+        </tr>
+        </thead>
+        <tbody>
+    {% endif %}
+    {% for user in users %}
+        <tr>
+            <td>{{ loop.index }}</td>
+            <td>{{ user.email }}</td>
+            <td>
+                {% for role in user.roles %}
+                    {% if role == "ROLE_ADMIN" %}
+                        Administrator
+                    {% else %}
+                        Użytkownik
+                    {% endif %}
+                {% endfor %}
+            </td>
+            <td>{{ user.isActive ? "Aktywne" : "Nie aktywne" }}</td>
+            <td><a href="{{ path('app_admin_user_details', {'id': user.id}) }}" class="link-success me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Przejdź do użytkownika"><i class="fas fa-play"></i></a></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+{% endblock %}
