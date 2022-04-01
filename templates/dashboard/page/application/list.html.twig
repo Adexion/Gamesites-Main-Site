@@ -8,8 +8,11 @@
 
     {% if userApplicationList is empty %}
         <div class="pt-3 d-flex justify-content-center">
-            <h1 class="h2">
-                Brak zainstalowanych aplikacji dla twojego konta
+            <h1 class="h4 w-75 text-center">
+                {% if not app.session.get('workspace') %}
+                    Dla twojego konta nie znaleźliśmy żadnych aplikacji. Jeżeli chcesz zobaczyć aplikację z obszaru roboczego, w którym jesteś,
+                    najpierw wybierz jeden z listy znajdującej się <a href="{{ path('app_workspace_list') }}" class="link-primary">tutaj</a>.
+                {% else %}Dla wybranego obszaru roboczego nie ma przypisanych oraz możliwych do przypisania aplikacji.{% endif %}
             </h1>
         </div>
     {% else %}
@@ -20,11 +23,11 @@
             <th scope="col">#</th>
             <th scope="col">Nazwa</th>
             <th scope="col">Domena</th>
-            <th scope="col">Opłacono do</th>
-            <th scope="col">Status</th>
             <th scope="col">Workspace</th>
             <th scope="col">Konto aplikacji</th>
-            <th scope="col">Akcje</th>
+            <th scope="col">Opłacono do</th>
+            <th scope="col">Status</th>
+            <th scope="col" class="text-center">Akcje</th>
         </tr>
         </thead>
         <tbody>
@@ -34,14 +37,16 @@
             <td>{{ loop.index }}</td>
             <td>{{ application.name }}</td>
             <td>{{ application.domain }}</td>
-            <td>{{ application.expiryDate | date('d.m.Y') }}</td>
-            <td>{{ application.installationFinish ? '<span class="text-success">Instalacja zakończona</span>' : '<span class="text-primary">Aplikacja nie zainstalowana</span>'}}</td>
             <td>{{ application.workspace ? application.workspace.name : 'Nie przypisana' }}</td>
             <td>{{ application.hasAccount(app.user) ? '<span class="text-success">Utworzone</span>' : '<span class="text-danger">Brak</span>' }}</td>
-            <td>
-                <a href="#" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Lista faktur"><i class="fas fa-file-pdf"></i></a>
-                <a href="#" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Historia zamówień"><i class="fas fa-shopping-basket"></i></a>
-                <a href="{{ path('app_setting', {'coupon': application.coupon}) }}" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Ustawienia"><i class="fas fa-server"></i></a>
+            <td>{{ application.expiryDate | date('d.m.Y') }}</td>
+            <td>{{ application.installationFinish ? '<span class="text-success">Instalacja zakończona</span>' : '<span class="text-primary">Aplikacja nie zainstalowana</span>'}}</td>
+            <td class="text-center">
+                <a href="{{ path('app_setting', {'coupon': application.coupon}) }}"
+                   class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top"
+                   title="{{ application.installationFinish ? 'Ustawienia' : 'Instalacja' }}">
+                        <i class="fas {{ application.installationFinish ? 'fa-server' : 'fa-spinner' }}"></i>
+                </a>
             </td>
         </tr>
     {% endfor %}

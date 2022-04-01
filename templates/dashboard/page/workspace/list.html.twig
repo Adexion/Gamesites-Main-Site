@@ -4,9 +4,9 @@
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Lista dostępnych obszarów roboczych</h1>
         <div>
-            <a class="btn-danger btn" href="{{ path('app_workspace_create') }}">Dodaj obszar roboczy</a>
+            <a class="btn-danger btn" href="{{ path('app_workspace_create') }}">Dodaj nowy obszar roboczy</a>
             {% if app.session.get('workspace') is not empty %}
-                <a href="{{ path('app_workspace_check_out') }}" class="btn-danger btn" >Opuść obszar</a>
+                <a href="{{ path('app_workspace_check_out') }}" class="btn-danger btn">Wyczyść aktywny obszar roboczy</a>
             {% endif %}
         </div>
     </div>
@@ -35,7 +35,7 @@
             <td>{{ workspace.name }}</td>
             <td>
                 {% if app.session.get('workspace') is empty or app.session.get('workspace').id != workspace.id %}
-                    <a href="{{ path('app_workspace_select', {'id': workspace.id}) }}" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Przełącz obszar roboczy"><i class="fas fa-play-circle"></i></a>
+                    <a href="{{ path('app_workspace_select', {'id': workspace.id}) }}" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Aktywuj obszar roboczy"><i class="fas fa-play-circle"></i></a>
                 {% endif %}
                     <a href="{{ path('app_workspace_user_list', {'id': workspace.id}) }}" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Pokaż listę użytkowników"><i class="fas fa-users"></i></a>
                 {% if workspace.creator == app.user %}
