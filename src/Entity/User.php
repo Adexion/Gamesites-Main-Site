@@ -81,6 +81,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $tickets;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="users")
+     */
+    private $company;
+
+    /**
+     * @ORM\OneToOne(targetEntity=Agreements::class, cascade={"persist", "remove"})
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $agreements;
+
     public function __construct()
     {
         $this->application = new ArrayCollection();
@@ -309,6 +320,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $ticket->setCreator(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCompany(): ?Company
+    {
+        return $this->company;
+    }
+
+    public function setCompany(?Company $company): self
+    {
+        $this->company = $company;
+
+        return $this;
+    }
+
+    public function getAgreements(): ?Agreements
+    {
+        return $this->agreements;
+    }
+
+    public function setAgreements(Agreements $agreements): self
+    {
+        $this->agreements = $agreements;
 
         return $this;
     }

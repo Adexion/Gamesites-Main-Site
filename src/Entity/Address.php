@@ -57,11 +57,6 @@ class Address
      */
     private $postCode;
 
-    /**
-     * @ORM\Column(type="bigint", nullable=true)
-     */
-    private $tin;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -163,18 +158,6 @@ class Address
     public function setPostCode(string $postCode): self
     {
         $this->postCode = $postCode;
-
-        return $this;
-    }
-
-    public function getTin(): ?int
-    {
-        return $this->tin;
-    }
-
-    public function setTin(?int $tin): self
-    {
-        $this->tin = $tin;
 
         return $this;
     }

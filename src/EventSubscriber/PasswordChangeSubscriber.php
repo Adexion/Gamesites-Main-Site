@@ -47,6 +47,6 @@ class PasswordChangeSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $event->setResponse(new RedirectResponse($this->urlGenerator->generate('app_profile_password')));
+        $event->setResponse(new RedirectResponse($this->urlGenerator->generate('app_profile_first')));
     }
 }

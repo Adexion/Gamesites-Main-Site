@@ -65,7 +65,7 @@ class SecurityController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            return $this->redirectToRoute('index');
+            $this->addFlash('success', 'Udało się utworzyć konto. Sprawdź proszę swój adres email w celu aktywacji konta.');
         }
 
         return $this->render('security/page/register.html.twig', [

@@ -6,6 +6,7 @@ use App\Entity\Application;
 use App\Entity\Workspace;
 use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\DBAL\Exception as DbalEx;
 use Doctrine\Persistence\ManagerRegistry;
 use Exception;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -23,7 +24,6 @@ class ApplicationRepository extends ServiceEntityRepository
         parent::__construct($registry, Application::class);
     }
 
-    /** @throws \Doctrine\DBAL\Exception */
     public function getCurrentApplications(?Workspace $workspace, UserInterface $user): array
     {
         $qb = $this->createQueryBuilder('s')
@@ -38,18 +38,7 @@ class ApplicationRepository extends ServiceEntityRepository
                 ->setParameter(':id', $workspace);
         }
 
-        return array_map(function (Application $application) use ($user){
-            $remote = new RemoteRepository($application->getDir());
-            $application = $application->toArray();
-
-            try {
-                $application['hasAccount'] = $remote->isUserExist($user->getUserIdentifier());
-            } catch (Exception $e) {
-                $application['hasAccount'] = false;
-            }
-
-            return $application;
-        }, $qb->getQuery()->execute());
+        return $qb->getQuery()->execute();
     }
 
     public function getUserApplications(UserInterface $user): array

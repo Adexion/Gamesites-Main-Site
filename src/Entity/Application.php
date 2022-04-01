@@ -3,10 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\ApplicationRepository;
+use App\Repository\RemoteRepository;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -255,5 +257,16 @@ class Application
         $this->workspace = $workspace;
 
         return $this;
+    }
+
+    public function hasAccount(UserInterface $user): bool
+    {
+        try {
+            $remote = new RemoteRepository($this->getDir());
+
+            return $remote->isUserExist($user->getUserIdentifier());
+        } catch (Exception $e) {
+            return false;
+        }
     }
 }

@@ -2,7 +2,7 @@
 
 {% block body %}
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Lista Powiadomień</h1>
+        <h1 class="h2">Lista powiadomień</h1>
         <div>
             <a class="btn-danger btn" href="{{ path('app_admin_notification_add') }}">Utwórz powiadomienie</a>
         </div>
@@ -32,7 +32,7 @@
         <tr>
             <td>{{ loop.index }}</td>
             <td>{{ notification.title }}</td>
-            <td>{{ notification.text }}</td>
+            <td>{{ notification.text | striptags | u.truncate(80, '...') }}</td>
             <td>{{ notification.isEmail ? 'Tak' : 'Nie' }}</td>
             <td>{{ notification.datetime | date('d.m.Y H:i') }}</td>
         </tr>

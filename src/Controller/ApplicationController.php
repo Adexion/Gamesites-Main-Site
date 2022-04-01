@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Form\ApplicationEditType;
-use App\Form\ApplicationResetPasswordType;
 use App\Form\ApplicationSetupType;
 use App\Repository\ApplicationRepository;
 use App\Repository\RemoteRepository;
@@ -36,7 +35,7 @@ class ApplicationController extends AbstractController
     public function configuration(string $coupon, Request $request, ApplicationRepository $repository, EntityManagerInterface $manager): Response
     {
         $application = $repository->findOneBy(['coupon' => $coupon]);
-        if (empty($application)) {
+        if (!$application) {
             return $this->redirectToRoute('app_application_list');
         }
 
@@ -66,7 +65,7 @@ class ApplicationController extends AbstractController
      * @Route("/dashboard/setting/{coupon}", name="app_setting")
      * @throws Exception
      */
-    public function setting(string $coupon, ApplicationRepository $repository, Request $request): Response
+    public function setting(string $coupon, ApplicationRepository $repository, Request $request, EntityManagerInterface $manager): Response
     {
         $application = $repository->findOneBy(['coupon' => $coupon]);
         if (!$application->getWasInstallerRun() && !$application->getInstallationFinish()) {
@@ -75,42 +74,24 @@ class ApplicationController extends AbstractController
             ]);
         }
 
-        $resetPasswordForm = $this->createForm(ApplicationResetPasswordType::class);
-        $resetPasswordForm->handleRequest($request);
-        if ($resetPasswordForm->isSubmitted() && $resetPasswordForm->isValid()) {
-            $remoteRepository = new RemoteRepository($application->getDir());
-            $remoteRepository->updateUserPassword($this->getUser(), $resetPasswordForm->getData()['password']);
-        }
+        $form = $this->createForm(ApplicationEditType::class, null, ['user' => $this->getUser()]);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            if ($form->getData()['password']) {
+                $remoteRepository = new RemoteRepository($application->getDir());
+                $remoteRepository->updateUserPassword($this->getUser(), $form->getData()['password']);
+            }
 
-        return $this->render('dashboard/page/application/settings.html.twig', [
-            'application' => $application,
-            'resetPasswordForm' => $resetPasswordForm->createView(),
-            'editForm' => $this->createForm(ApplicationEditType::class, $application, ['user' => $this->getUser()]
-            )->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/dashboard/setting/{coupon}/edit", name="app_setting_edit")
-     */
-    public function edit(string $coupon, ApplicationRepository $repository, Request $request, EntityManagerInterface $manager): Response {
-        $application = $repository->findOneBy(['coupon' => $coupon]);
-        $editForm = $this->createForm(
-            ApplicationEditType::class,
-            $application,
-            ['user' => $this->getUser(), 'name' => $application->getName()]
-        );
-        $editForm->handleRequest($request);
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $application->setWorkspace($form->getData()['workspace']);
             $manager->persist($application);
             $manager->flush();
+
+            $this->addFlash('success', 'Pomyślnie zapisano dane!');
         }
 
         return $this->render('dashboard/page/application/settings.html.twig', [
             'application' => $application,
-            'resetPasswordForm' => $this->createForm(ApplicationResetPasswordType::class)->createView(),
-            'editForm' => $editForm->createView(),
+            'form' => $form->createView()
         ]);
     }
 

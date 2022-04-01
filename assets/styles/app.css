@@ -325,7 +325,7 @@ footer {
 }
 
 ::-webkit-scrollbar {
-    width: 0.5vw;
+    width: 0.7vw;
     height: 0.3vw;
     background-color: transparent;
 }

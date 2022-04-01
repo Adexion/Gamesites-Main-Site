@@ -1,15 +1,19 @@
 Domain: Domena
 Coupon: Kod zamówienia
 Name: Nazwa
+Full name: Imie i nazwisko
+Company name: Nazwa firmy (zgodna z przekazanymi danymi do CEIDG)
 Create order: Przejdź do konfiguracji
 Configure: Rozpocznij instalacje
 Workspace: Obszar roboczy
+Remember me: Zapamiętaj mnie
 
 Password: Hasło
 Repeat Password: Powtórz hasło
 Submit: Zapisz
 Each: Czy zmienić hasło dla wszystkich twoich aplikacji?
-Enable: Usuń moje konto wraz z wszystkimi danymi (RODO)
+Your workspace name: Wpisz nazwę obszaru roboczego do utworzenia
+Create: Utwórz
 
 Name or Company name: Imie i nazwisko bądź nazwa firmy (z CEIDG)
 Nickname: Nazwa konta
@@ -21,6 +25,7 @@ Post code: Kod pocztowy
 Tin: NIP
 
 Invoice: Wystaw fakturę za zamówienie.
+Expiry date: Okres płatności
 
 Title: Tytuł
 Type: Typ
@@ -31,4 +36,7 @@ pending: Nie odpowiedziano
 
 Text: Treść
 Is email: Czy wysłać powiadomienie mailem?
-Payment notification: Powiadom mnie gdy aplikacaj będzie aktywna.
+Payment notification: Powiadom mnie gdy aplikacja będzie aktywna.
+
+Marketing: Wyrażam zgodę na przetwarzanie moich danych osobowych w celach marketingowych, otrzymywanie powiadomień e-mail, oraz informacji związanych z aktualizacją aplikacji, wszelkich nowości i naprawy błędów.
+Rodo: Zapoznałem się z informacjami o administratorach oraz przetwarzaniu moich danych osobowych. Wyrażam zgodę na otrzymywanie informacji handlowej drogą elektroniczną bądź pocztową.

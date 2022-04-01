@@ -3,6 +3,7 @@
 {% block body %}
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
         <h1 class="h2">Aktywne aplikacje</h1>
+        <a class="btn btn-danger" href="{{ path('app_order_realize') }}">Utwórz aplikacje dla zamówienia</a>
     </div>
 
     {% if userApplicationList is empty %}
@@ -36,8 +37,7 @@
             <td>{{ application.expiryDate | date('d.m.Y') }}</td>
             <td>{{ application.installationFinish ? '<span class="text-success">Instalacja zakończona</span>' : '<span class="text-primary">Aplikacja nie zainstalowana</span>'}}</td>
             <td>{{ application.workspace ? application.workspace.name : 'Nie przypisana' }}</td>
-            <td>{{ application.hasAccount ? '<span class="text-success">Utworzone</span>' : '<span class="text-danger">Brak</span>' }}</td>
-
+            <td>{{ application.hasAccount(app.user) ? '<span class="text-success">Utworzone</span>' : '<span class="text-danger">Brak</span>' }}</td>
             <td>
                 <a href="#" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Lista faktur"><i class="fas fa-file-pdf"></i></a>
                 <a href="#" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Historia zamówień"><i class="fas fa-shopping-basket"></i></a>

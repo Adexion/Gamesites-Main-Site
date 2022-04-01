@@ -25,13 +25,13 @@
                     {{ form_widget(form._password, {attr: {placeholder: "Min. 8 znaków"}}) }}
                 </label>
 
-                {{ form_widget(form._remember_me, {label: 'Zapamiętaj mnie'}) }}
+                {{ form_widget(form._remember_me) }}
+
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                 {{ form_widget(form.logIn, {label: 'Zaloguj', attr: {class: 'w-100 btn-primary'}}) }}
                 {{ form_end(form) }}
-                <p class="copyright">2022 GameSites.pl&trade; - Wszelkie prawa zastrzeżone.</p>
-                <a href="{{ path('app_register') }}" class="btn w-100 btn-outline-dark">Utwórz konto</a>
-
+                <a href="{{ path('app_register') }}" class="btn w-100 btn-outline-dark mt-3">Utwórz konto</a>
+                <p class="copyright">2022 GameSites.pl&trade; — Wszelkie prawa zastrzeżone.</p>
             </div>
         </div>
 

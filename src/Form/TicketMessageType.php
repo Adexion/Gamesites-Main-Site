@@ -12,7 +12,6 @@ class TicketMessageType extends BaseType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('message', TextareaType::class)
-            ->add('submit', SubmitType::class);
+            ->add('message', TextareaType::class);
     }
 }

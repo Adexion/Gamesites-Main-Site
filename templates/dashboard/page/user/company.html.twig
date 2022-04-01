@@ -2,11 +2,16 @@
 
 {% block body %}
     <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-        <h1 class="h2">Ustal swoje hasło</h1>
+        <h1 class="h2">Zaktualizuj dane swojej firmy</h1>
         <a href="{{ path('app_profile') }}" class="btn-danger btn">Powrót</a>
+    </div>
+
+    <div class="alert alert-info">
+        Wprowadzenie danych firmowych zmieni typ twojego konta. Operacja nie będzie mogła zostać cofnięta.
     </div>
 
     <div class="">
         {{ form(form) }}
     </div>
 {% endblock %}
+

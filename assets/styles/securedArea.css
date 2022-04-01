@@ -133,6 +133,14 @@ label input {
     line-height: 37px;
     text-align: center;
 }
+.mw-200px {
+    max-width: 447px;
+}
+
+.agreements .form-check-label {
+    line-height: 18px;
+    font-size: 14px;
+}
 
 @media (max-width: 1410px) {
     .container {

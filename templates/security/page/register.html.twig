@@ -7,6 +7,11 @@
                 <p class="login">Rejetracja do serwisu</p>
                 <p class="login-text">Zarządzaj stroną i sklepem w jednym miejscu!</p>
                 <div class="login-gap"></div>
+
+                {% for message in app.flashes('success') %}
+                    <div class="alert-success alert w-100">{{ message }}</div>
+                {% endfor %}
+
                 {{ form_start(registrationForm) }}
                 <label>
                     Email
@@ -16,11 +21,14 @@
                     {{ form_widget(registrationForm.plainPassword, {attr: {placeholder: "Min. 8 znaków"}}) }}
                 </label>
 
-                {{ form_widget(registrationForm.agreeTerms, {label: 'Akceptuję warunki korzystania z serwisu'}) }}
+                <div class="mw-200px agreements">
+                    {{ form_row(registrationForm.agreements.marketing) }}
+                    {{ form_row(registrationForm.agreements.rodo) }}
+                </div>
                 <button type="submit" class="btn btn-primary w-100">Zarejestruj się</button>
                 {{ form_end(registrationForm) }}
-                <p class="copyright">2022 GameSites.pl&trade; - Wszelkie prawa zastrzeżone.</p>
-                <a href="{{ path('app_login') }}" class="btn w-100 btn-outline-dark">Zaloguj</a>
+                <a href="{{ path('app_login') }}" class="btn w-100 btn-outline-dark mt-3">Zaloguj się</a>
+                <p class="copyright">2022 GameSites.pl&trade; — Wszelkie prawa zastrzeżone.</p>
             </div>
         </div>
 
@@ -29,7 +37,8 @@
             <h1>GameSites</h1>
             <h2>The true power of gaming...</h2>
             <br>
-            <h3 class="w-75">Zaloguj się do panelu jednej z najbardziej dopracowanych i szczegółowych aplikacji na rynku. Ułatwiamy wszystko byś ty nie musiał robić!</h3>
+            <h3 class="w-75">Zaloguj się do panelu jednej z najbardziej dopracowanych i szczegółowych aplikacji na
+                rynku. Ułatwiamy wszystko byś ty nie musiał robić!</h3>
         </div>
     </div>
 {% endblock %}

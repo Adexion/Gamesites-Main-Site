@@ -18,29 +18,16 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a class="nav-link {% if app.request.get('_route') == 'app_order_realize' %}active{% endif %}"
-                   href="{{ path('app_order_realize') }}">
-                    <i class="fas fa-tasks feather"></i>
-                    Realizacja zamówienia
-                </a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link {% if app.request.get('_route') == 'app_order_create' %}active{% endif %}"
                    href="{{ path('app_order_create') }}">
                     <i class="fas fa-shopping-basket feather"></i>
-                    Zamów
+                    Złóż zamówienie
                 </a>
             </li>
-        </ul>
-
-        <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
-            <span>Pozostałe</span>
-        </h6>
-        <ul class="nav flex-column mb-2">
             <li class="nav-item">
                 <a class="nav-link" href="{{ path('app_ticket_list') }}">
-                    <i class="fas fa-address-book feather"></i>
-                    Support
+                    <i class="fas fa-phone feather"></i>
+                    Zgłoszenia
                 </a>
             </li>
         </ul>
@@ -59,7 +46,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('app_admin_ticket_list') }}">
                         <i class="fas fa-ticket-alt feather"></i>
-                        Support
+                        Lista zgłoszeń
                     </a>
                 </li>
                 <li class="nav-item">

@@ -33,7 +33,7 @@
             {{ form_start(form, {'attr': {'class': 'd-flex justify-content-center w-100 align-items-center'}}) }}
             <div class="input-group">
                 {{ form_widget(form.message, {'attr': {'placeholder': 'Wpisz wiadomość tutaj ...'}}) }}
-                {{ form_widget(form.submit,  {'attr': {'class': 'btn btn-danger '}}) }}
+                <button type="submit" class="btn btn-danger"><i class="fas fa-paper-plane"></i></button>
             </div>
             {{ form_end(form) }}
         </div>
