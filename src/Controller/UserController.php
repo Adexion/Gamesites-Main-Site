@@ -2,22 +2,23 @@
 
 namespace App\Controller;
 
-use App\Entity\Company;
 use App\Entity\Agreements;
+use App\Entity\Company;
 use App\Entity\User;
-use App\Repository\UserRepository;
-use Doctrine\DBAL\Exception;
 use App\Form\AgreementsType;
+use App\Form\ApplicationResetPasswordType;
 use App\Form\UserAddressType;
 use App\Form\UserCompanyType;
 use App\Form\UserPasswordType;
+use App\Repository\UserRepository;
 use App\Service\ApplicationService;
+use Doctrine\DBAL\Exception;
 use Doctrine\ORM\EntityManagerInterface;
-use App\Form\ApplicationResetPasswordType;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class UserController extends AbstractController
 {
@@ -46,7 +47,7 @@ class UserController extends AbstractController
         }
 
         return $this->render('dashboard/page/user/profile.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 
@@ -65,6 +66,7 @@ class UserController extends AbstractController
             $manager->flush();
 
             $this->addFlash('success', 'Pomyślnie zapisano twoje dane.');
+
             return $this->redirectToRoute('app_profile');
         }
 
@@ -95,6 +97,7 @@ class UserController extends AbstractController
             $manager->flush();
 
             $this->addFlash('success', 'Pomyślnie zapisano twoje dane.');
+
             return $this->redirectToRoute('app_profile');
         }
 
@@ -123,6 +126,7 @@ class UserController extends AbstractController
             $manager->flush();
 
             $this->addFlash('success', 'Pomyślnie zapisano twoje dane.');
+
             return $this->redirectToRoute('app_profile');
         }
 
@@ -165,7 +169,7 @@ class UserController extends AbstractController
     public function userList(UserRepository $repository): Response
     {
         return $this->render('dashboard/page/admin/user/list.html.twig', [
-            'users' => $repository->findAll()
+            'users' => $repository->findAll(),
         ]);
     }
 
@@ -175,7 +179,20 @@ class UserController extends AbstractController
     public function userDetails(User $user): Response
     {
         return $this->render('dashboard/page/admin/user/profile.html.twig', [
-            'user' => $user
+            'user' => $user,
         ]);
+    }
+
+    /**
+     * @Route("/admin/user/role/toggle/{id}", name="app_admin_user_role_toggle")
+     */
+    public function userRoleToggle(User $user, EntityManagerInterface $entityManager): RedirectResponse
+    {
+        $user->toggleAdmin();
+        $entityManager->persist($user);
+        $entityManager->flush();
+        $this->addFlash("success", "Pomyślnie przełączono role");
+
+        return $this->redirectToRoute('app_admin_user_details', ["id" => $user->getId()]);
     }
 }

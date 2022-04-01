@@ -141,6 +141,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function toggleAdmin() {
+        if(($roles = array_search("ROLE_ADMIN", $this->roles)) !== false){
+            unset($this->roles[$roles]);
+        } else {
+            $this->roles[] = "ROLE_ADMIN";
+        }
+    }
+
     public function getPassword(): string
     {
         return $this->password;

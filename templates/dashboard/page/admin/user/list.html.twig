@@ -30,13 +30,7 @@
             <td>{{ loop.index }}</td>
             <td>{{ user.email }}</td>
             <td>
-                {% for role in user.roles %}
-                    {% if role == "ROLE_ADMIN" %}
-                        Administrator
-                    {% else %}
-                        Użytkownik
-                    {% endif %}
-                {% endfor %}
+              {{ "ROLE_ADMIN" in user.roles ? "Administrator": "Użytkownik" }}
             </td>
             <td>{{ user.isActive ? "Aktywne" : "Nie aktywne" }}</td>
             <td><a href="{{ path('app_admin_user_details', {'id': user.id}) }}" class="link-success me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Przejdź do użytkownika"><i class="fas fa-play"></i></a></td>
