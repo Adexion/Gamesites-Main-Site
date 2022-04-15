@@ -33,9 +33,8 @@
             <td>{{ order.creator.userIdentifier }}</td>
             <td>{{ order.isActive ? 'Aktywny' : 'Nieaktywny' }}</td>
             <td>{{ order.invoice ? 'Wybrana' : 'Brak' }}</td>
-
             <td>
-                <a href="{{ path('app_admin_order_toggle', {'id': order.id}) }}" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="{% if not order.isActive %}Aktywuj{% else %} Deaktywuj {% endif %} kupon"><i class="fas fa-play-circle"></i></a>
+                {% if not order.isActive %}<a href="{{ path('app_admin_order_toggle', {'id': order.id}) }}" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Aktywuj kupon"><i class="fas fa-play-circle"></i></a>{% endif %}
                 <a href="{{ path('app_admin_order_remove', {'id': order.id}) }}" class="link-secondary me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Usuń kupon"><i class="fas fa-trash"></i></a>
             </td>
         </tr>

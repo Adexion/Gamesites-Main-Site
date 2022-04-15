@@ -2,14 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\Address;
 use App\Entity\Agreements;
 use App\Entity\Company;
 use App\Entity\User;
 use App\Form\AgreementsType;
-use App\Form\ApplicationResetPasswordType;
 use App\Form\UserAddressType;
 use App\Form\UserCompanyType;
 use App\Form\UserPasswordType;
+use App\Form\SetFirstPasswordType;
 use App\Repository\UserRepository;
 use App\Service\ApplicationService;
 use Doctrine\DBAL\Exception;
@@ -43,7 +44,6 @@ class UserController extends AbstractController
             $manager->flush();
 
             $this->addFlash('success', 'Pomyślnie zapisano zmiany.');
-
         }
 
         return $this->render('dashboard/page/user/profile.html.twig', [
@@ -57,11 +57,12 @@ class UserController extends AbstractController
      */
     public function address(Request $request, EntityManagerInterface $manager): Response
     {
-        $address = $this->getUser()->getAddress();
+        $address = $this->getUser()->getAddress() ?? new Address();
 
         $form = $this->createForm(UserAddressType::class, $address);
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+            $address->setClient($this->getUser());
             $manager->persist($address);
             $manager->flush();
 
@@ -141,7 +142,7 @@ class UserController extends AbstractController
      */
     public function firstLogin(Request $request, ApplicationService $applicationService, EntityManagerInterface $manager)
     {
-        $form = $this->createForm(ApplicationResetPasswordType::class);
+        $form = $this->createForm(SetFirstPasswordType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

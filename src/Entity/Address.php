@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\AddressRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=AddressRepository::class)
@@ -91,7 +92,7 @@ class Address
         return $this->client;
     }
 
-    public function setClient(User $client): self
+    public function setClient(UserInterface $client): self
     {
         if ($client->getAddress() !== $this) {
             $client->setAddress($this);

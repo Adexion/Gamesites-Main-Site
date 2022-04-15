@@ -8,6 +8,9 @@
     {% for message in app.flashes('success') %}
         <div class="alert-success alert w-100">{{ message }}</div>
     {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="alert-warning alert w-100">{{ message }}</div>
+    {% endfor %}
 
     <div class="row justify-content-between mb-4">
         <div class="col-lg-6 col-12">
@@ -30,6 +33,11 @@
             </table>
             <a href="{{ path('app_profile_password') }}" class="btn btn-primary">Aktualizuj hasło</a>
             {% if not app.user.company %}<a href="{{ path('app_profile_company') }}" class="btn btn-primary">Ustaw jako konto firmowe</a>{% endif %}
+            {% if not app.user.referrer %}
+                <a href="{{ path('app_referrer_create') }}" class="btn btn-success">Chcę zostać partnerem GameSites</a>
+            {% else %}
+                <a href="{{ path('app_referrer') }}" class="btn btn-danger">Panel partnera</a>
+            {% endif %}
         </div>
         <div class="col-lg-6 col-12">
             <table class="table table-striped table-sm">
@@ -41,27 +49,27 @@
                 <tbody>
                 <tr>
                     <th scope="col">Imie i nazwisko:</th>
-                    <td>{{ app.user.address.name }}</td>
+                    <td>{{ app.user.address.name ?? '' }}</td>
                 </tr>
                 <tr>
                     <th scope="col">Pseudonim:</th>
-                    <td>{{ app.user.address.nickname }}</td>
+                    <td>{{ app.user.address.nickname ?? '' }}</td>
                 </tr>
                 <tr>
                     <th scope="col">Ulica:</th>
-                    <td>{{ app.user.address.street }}</td>
+                    <td>{{ app.user.address.street ?? '' }}</td>
                 </tr>
                 <tr>
                     <th scope="col">Numer domu / Numer mieszkania:</th>
-                    <td>{{ app.user.address.houseNumber ~ (app.user.address.apartmentNumber ? '/' ~ app.user.address.apartmentNumber : '') }}</td>
+                    <td>{% if app.user.address %}{{ app.user.address.houseNumber ~ (app.user.address.apartmentNumber ? '/' ~ app.user.address.apartmentNumber : '') }}{% endif %}</td>
                 </tr>
                 <tr>
                     <th scope="col">Miasto:</th>
-                    <td>{{ app.user.address.city }}</td>
+                    <td>{{ app.user.address.city ?? '' }}</td>
                 </tr>
                 <tr>
                     <th scope="col">Kod pocztowy:</th>
-                    <td>{{ app.user.address.postCode }}</td>
+                    <td>{{ app.user.address.postCode ?? '' }}</td>
                 </tr>
                 </tbody>
             </table>

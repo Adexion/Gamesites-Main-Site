@@ -2,22 +2,24 @@
 
 namespace App\Controller;
 
+use DateTime;
+use Exception;
+use App\Entity\Order;
 use App\Entity\Application;
 use App\Entity\Notification;
-use App\Entity\Order;
 use App\Form\CreateOrderType;
+use App\Entity\ReferrerPoint;
 use App\Form\RealizeOrderType;
-use App\Repository\OrderRepository;
 use App\Service\MailerService;
+use App\Enum\ReferrerPointType;
+use App\Repository\OrderRepository;
 use App\Service\RandomCouponGenerator;
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class OrderController extends AbstractController
 {
@@ -86,7 +88,7 @@ class OrderController extends AbstractController
 
             $mailerService->sendCoupon($this->getUser(), $order->getCoupon());
 
-            return $this->redirectToRoute('app_admin_order_confirmation', ['id' => $order->getId()]);
+            return $this->redirectToRoute('app_order_confirmation', ['id' => $order->getId()]);
         }
 
         return $this->render('dashboard/page/order/orderCreate.html.twig', [
@@ -95,7 +97,7 @@ class OrderController extends AbstractController
     }
 
     /**
-     * @Route("/admin/order/confirmation/{id}", name="app_admin_order_confirmation")
+     * @Route("/order/confirmation/{id}", name="app_order_confirmation")
      */
     public function adminOrderConfirmation(Order $order): Response
     {
@@ -124,6 +126,21 @@ class OrderController extends AbstractController
         $manager->flush();
 
         if ($order->getIsActive()) {
+            $referrer = $order->getCreator()->getInviting();
+            if ($referrer) {
+                $point = (new ReferrerPoint())
+                    ->setClient($order->getCreator())
+                    ->setPoint(15)
+                    ->setDate(new DateTime())
+                    ->setType(ReferrerPointType::INFLOW);
+                $manager->persist($point);
+                $manager->flush();
+
+                $referrer->addPoint($point);
+                $manager->persist($referrer);
+                $manager->flush();
+            }
+
             $notification = (new Notification())
                 ->setText("Twój kupon {$order->getCoupon()} został aktywowany. Możesz teraz założyć aplikacje!")
                 ->setTitle('Potwierdzenie zamówienia')

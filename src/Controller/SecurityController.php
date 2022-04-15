@@ -8,6 +8,7 @@ use App\Form\RegistrationFormType;
 use App\Service\MailerService;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use App\Repository\UserReferrerRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -38,13 +39,16 @@ class SecurityController extends AbstractController
 
     /**
      * @Route("/register", name="app_register")
+     * @Route("/register/{referrer}", name="app_register_referrer")
      * @throws TransportExceptionInterface
      */
     public function register(
         Request $request,
         UserPasswordHasherInterface $userPasswordHasher,
         EntityManagerInterface $entityManager,
-        MailerService $mailerService
+        MailerService $mailerService,
+        UserReferrerRepository $userReferrerRepository,
+        string $referrer
     ): Response {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -64,6 +68,13 @@ class SecurityController extends AbstractController
 
             $entityManager->persist($user);
             $entityManager->flush();
+
+            if ($referrer && $userReferer = $userReferrerRepository->findOneBy(['code' => $referrer])) {
+                $userReferer->addInvited($user);
+
+                $entityManager->persist($userReferer);
+                $entityManager->flush();
+            }
 
             $this->addFlash('success', 'Udało się utworzyć konto. Sprawdź proszę swój adres email w celu aktywacji konta.');
         }

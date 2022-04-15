@@ -92,12 +92,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $agreements;
 
+    /**
+     * @ORM\OneToOne(targetEntity=UserReferrer::class, mappedBy="client", cascade={"persist", "remove"})
+     */
+    private $referrer;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=UserReferrer::class, inversedBy="invited")
+     */
+    private $inviting;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=false)
+     * @ORM\Version
+     */
+    private $registrationDate;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ReferrerPoint::class, mappedBy="client", orphanRemoval=true)
+     */
+    private $referrerPoints;
+
     public function __construct()
     {
         $this->application = new ArrayCollection();
         $this->invoice = new ArrayCollection();
         $this->workspace = new ArrayCollection();
         $this->tickets = new ArrayCollection();
+        $this->referrerPoints = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -353,6 +375,77 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setAgreements(Agreements $agreements): self
     {
         $this->agreements = $agreements;
+
+        return $this;
+    }
+
+    public function getReferrer(): ?UserReferrer
+    {
+        return $this->referrer;
+    }
+
+    public function setReferrer(UserReferrer $referrer): self
+    {
+        // set the owning side of the relation if necessary
+        if ($referrer->getClient() !== $this) {
+            $referrer->setClient($this);
+        }
+
+        $this->referrer = $referrer;
+
+        return $this;
+    }
+
+    public function getInviting(): ?UserReferrer
+    {
+        return $this->inviting;
+    }
+
+    public function setInviting(?UserReferrer $inviting): self
+    {
+        $this->inviting = $inviting;
+
+        return $this;
+    }
+
+    public function getRegistrationDate(): ?\DateTimeInterface
+    {
+        return $this->registrationDate;
+    }
+
+    public function setRegistrationDate(\DateTimeInterface $registrationDate): self
+    {
+        $this->registrationDate = $registrationDate;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, ReferrerPoint>
+     */
+    public function getReferrerPoints(): Collection
+    {
+        return $this->referrerPoints;
+    }
+
+    public function addReferrerPoint(ReferrerPoint $referrerPoint): self
+    {
+        if (!$this->referrerPoints->contains($referrerPoint)) {
+            $this->referrerPoints[] = $referrerPoint;
+            $referrerPoint->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReferrerPoint(ReferrerPoint $referrerPoint): self
+    {
+        if ($this->referrerPoints->removeElement($referrerPoint)) {
+            // set the owning side to null (unless already changed)
+            if ($referrerPoint->getClient() === $this) {
+                $referrerPoint->setClient(null);
+            }
+        }
 
         return $this;
     }
