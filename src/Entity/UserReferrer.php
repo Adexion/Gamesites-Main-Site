@@ -27,7 +27,7 @@ class UserReferrer
     private $code;
 
     /**
-     * @ORM\OneToOne(targetEntity=User::class, inversedBy="userReferrer", cascade={"persist", "remove"})
+     * @ORM\OneToOne(targetEntity=User::class, inversedBy="referrer", cascade={"persist", "remove"})
      * @ORM\JoinColumn(nullable=false)
      */
     private $client;
