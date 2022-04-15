@@ -21,8 +21,6 @@ class UserReferrerRepository extends ServiceEntityRepository
         parent::__construct($registry, UserReferrer::class);
     }
 
-
-
     /**
      * @throws ORMException
      * @throws OptimisticLockException
