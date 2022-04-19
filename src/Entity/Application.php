@@ -119,7 +119,9 @@ class Application
 
     public function getDir(): ?string
     {
-        return lcfirst(join('', array_map(fn($value) => ucfirst(strtolower($value)), explode(' ', $this->getName()))));
+        $camelCase = lcfirst(join('', array_map(fn($value) => ucfirst(strtolower($value)), explode(' ', $this->getName()))));
+
+        return preg_replace ('/[^\p{L}\p{N}]/u', '', $camelCase);
     }
 
     public function getDomain(): ?string
