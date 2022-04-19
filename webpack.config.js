@@ -10,6 +10,7 @@ Encore
     .addEntry('app', './assets/js/app.js')
     .addEntry('dashboard', './assets/js/dashboard.js')
     .addEntry('installer', './assets/js/installer.js')
+    .addEntry('cookie', './assets/js/cookie.js')
     .addStyleEntry('securedArea', './assets/styles/securedArea.css')
     .splitEntryChunks()
     .enableSingleRuntimeChunk()
