@@ -36,6 +36,7 @@ class ApplicationAPIController extends AbstractController
 
         $commandList = [
             "cd /var/www/ && git clone git@github.com:Adexion/GameSitesSell.git {{ dir }}",
+            "git config --global --add safe.directory /var/www/{{ dir }}",
             'echo "COUPON=' . $application->getCoupon() . ' \nAPP_ENV=prod \nDATABASE_URL=\"mysql://symfony:8bb725a4w3K*@127.0.0.1:3306/{{ dir }}?serverVersion=5.7\" \nAPP_SECRET=3bb3538a0b014d635d8380564a84e48b" > /var/www/{{ dir }}/.env',
         ];
 
