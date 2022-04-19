@@ -71,7 +71,7 @@ h2 {
 #main {
     margin-top: -150px;
     padding-top: 150px;
-    background-image: url('/assets/images/bg.png');
+    background-image: url('/assets/images/bg.webp');
     height: 100vh;
 }
 
@@ -142,7 +142,7 @@ h2 {
 }
 
 .middle-soft {
-    background-image: url("/assets/images/soft-light.png");
+    background-image: url("/assets/images/soft-light.webp");
     border-radius: 10px;
     width: 100%;
     height: 100%;
@@ -166,7 +166,7 @@ h2 {
 }
 
 .down-bg {
-    background-image: url("/assets/images/rect.png");
+    background-image: url("/assets/images/rect.webp");
     background-repeat: no-repeat;
     min-height: 255px;
     border: 2px solid #A8A8A8;
@@ -177,7 +177,7 @@ h2 {
 }
 
 .down-soft {
-    background-image: url("/assets/images/rect-soft.png");
+    background-image: url("/assets/images/rect-soft.webp");
     background-repeat: no-repeat;
     border-radius: 9px;
     width: 100%;
@@ -207,7 +207,7 @@ a, a:hover {
 
 .about-soft {
     position: absolute;
-    background-image: url("/assets/images/about soft.png");
+    background-image: url("/assets/images/about_soft.webp");
     background-size: cover;
     background-repeat: no-repeat;
     height: 100%;
@@ -250,14 +250,14 @@ a, a:hover {
 .ap-up {
     top: 29px;
     left: 0;
-    background-image: url("/assets/images/apostrof-down.png");
+    background-image: url("/assets/images/apostrof-down.webp");
     background-position: -76px 0;
 }
 
 .ap-down {
     bottom: 29px;
     right: 0;
-    background-image: url("/assets/images/apostrof-up.png");
+    background-image: url("/assets/images/apostrof-up.webp");
 }
 
 /* PAYMENT */
@@ -306,7 +306,7 @@ footer {
 }
 
 .footer-soft {
-    background-image: url("/assets/images/footer-soft.png");
+    background-image: url("/assets/images/footer-soft.webp");
     background-size: cover;
     mix-blend-mode: soft-light;
     height: 100%;
