@@ -36,7 +36,7 @@ global.$ = global.jQuery = $;
                 breakpoint: 480,
                 settings: {
                     slidesToShow: 1,
-                    slidesToScroll: 0
+                    slidesToScroll: 1
                 }
             }
         ]
