@@ -13,6 +13,8 @@ Encore
     .addEntry('cookie', './assets/js/cookie.js')
     .addStyleEntry('securedArea', './assets/styles/securedArea.css')
     .splitEntryChunks()
+    .configureImageRule({type: 'asset'})
+    .configureFontRule({type: 'asset'})
     .enableSingleRuntimeChunk()
     .cleanupOutputBeforeBuild()
     .enableBuildNotifications()
