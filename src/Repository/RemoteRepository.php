@@ -26,7 +26,6 @@ class RemoteRepository
     public function insertConfiguration(Application $application)
     {
         $this->con->insert('configuration', [
-            'server_name' => $application->getName(),
             'ip' => $application->getDomain(),
             'template' => 'client',
             'logo' => 'minecraft.png',
