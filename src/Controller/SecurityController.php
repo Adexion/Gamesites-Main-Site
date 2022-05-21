@@ -48,7 +48,7 @@ class SecurityController extends AbstractController
         EntityManagerInterface $entityManager,
         MailerService $mailerService,
         UserReferrerRepository $userReferrerRepository,
-        string $referrer
+        ?string $referrer = null
     ): Response {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -77,6 +77,8 @@ class SecurityController extends AbstractController
             }
 
             $this->addFlash('success', 'Udało się utworzyć konto. Sprawdź proszę swój adres email w celu aktywacji konta.');
+
+            return $this->redirectToRoute('app_login');
         }
 
         return $this->render('security/page/register.html.twig', [

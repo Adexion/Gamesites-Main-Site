@@ -16,6 +16,7 @@ class RandomReferrerGenerator
     public function generate(): string
     {
         $val = '';
+
         $last = $this->referrerRepository->findOneBy([], ['id' => 'DESC']);
         for ($i = 0; $i < 7 - (strlen($last ? $last->getId() : 0)); $i++) {
             $val .= rand(0, 9);

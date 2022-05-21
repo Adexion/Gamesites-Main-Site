@@ -23,13 +23,13 @@
 }
 
 .gradient {
-    background-image: url('/assets/images/bg.png');
+    background-image: url('/assets/images/bg.webp');
     background-size: 125% 100%;
     background-repeat: no-repeat;
 }
 
 .gradient-image {
-    background-image: url("/assets/images/logo.png");
+    background-image: url("/assets/images/logo.webp");
     background-repeat: no-repeat;
     background-position: center;
     width: 451px;

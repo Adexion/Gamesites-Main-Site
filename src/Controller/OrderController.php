@@ -141,12 +141,14 @@ class OrderController extends AbstractController
                 $manager->flush();
             }
 
-            $notification = (new Notification())
-                ->setText("Twój kupon {$order->getCoupon()} został aktywowany. Możesz teraz założyć aplikacje!")
-                ->setTitle('Potwierdzenie zamówienia')
-                ->addUser($this->getUser());
+            if ($order->getPaymentNotification()) {
+                $notification = (new Notification())
+                    ->setText("Twój kupon {$order->getCoupon()} został aktywowany. Możesz teraz założyć aplikacje!")
+                    ->setTitle('Potwierdzenie zamówienia')
+                    ->addUser($this->getUser());
 
-            $service->sendNotification($notification);
+                $service->sendNotification($notification);
+            }
         }
 
         return $this->redirectToRoute('app_admin_order_list');

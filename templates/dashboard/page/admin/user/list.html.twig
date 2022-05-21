@@ -33,7 +33,10 @@
               {{ "ROLE_ADMIN" in user.roles ? "Administrator": "Użytkownik" }}
             </td>
             <td>{{ user.isActive ? "Aktywne" : "Nie aktywne" }}</td>
-            <td><a href="{{ path('app_admin_user_details', {'id': user.id}) }}" class="link-success me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Przejdź do użytkownika"><i class="fas fa-play"></i></a></td>
+            <td>
+                <a href="{{ path('app_admin_user_details', {'id': user.id}) }}" class="link-success me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Przejdź do użytkownika"><i class="fas fa-play"></i></a>
+                {% if user.isActive and app.user.email != user.email %}<a href="{{ path('app_application_list', {'_switch_user': user.email}) }}" class="link-success me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Przełącz użytkownika"><i class="fas fa-user"></i></a>{% endif %}
+            </td>
         </tr>
     {% endfor %}
     </tbody>
