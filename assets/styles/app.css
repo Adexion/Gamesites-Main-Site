@@ -44,6 +44,25 @@ h2 {
     color: #ea47a6;
 }
 
+@keyframes animation {
+    0%   {right: -1000px}
+    100%  {right: 0}
+}
+
+.demo-sites {
+    transition-property: left;
+    transition-duration: 2s;
+    transition-timing-function: linear;
+    transition-delay: 1s;
+    left: 0;
+}
+
+.demo-sites:before {
+    left: -1000px;
+    content: '';
+}
+
+
 /*=================NAVBAR=================*/
 .nav-container {
     margin-top: 50px !important;
