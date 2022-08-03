@@ -69,6 +69,7 @@ class MailerService
     public function sendNotification(Notification $notification)
     {
         $emails = array_map(fn(User $user) => $user->getEmail(), $notification->getUsers()->toArray());
+        $emails = array_merge($emails, $notification->getRawMailList());
 
         $email = (new TemplatedEmail())
             ->from($this->mail)
@@ -78,5 +79,10 @@ class MailerService
             ->context(['notification' => $notification->getText()]);
 
         $this->mailer->send($email);
+    }
+
+    public function getProviderEmail(): ?string
+    {
+        return $this->mail;
     }
 }

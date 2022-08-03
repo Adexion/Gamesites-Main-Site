@@ -86,7 +86,13 @@ class OrderController extends AbstractController
             $entityManager->persist($order);
             $entityManager->flush();
 
+            $notification = (new Notification())
+                ->setText('Nowe zamówienie w systemie')
+                ->setTitle("Użytkownik {$this->getUser()->getEmail()} utworzył nowe zamówienie o numerze - {$order->getCoupon()}")
+                ->addRawMail($mailerService->getProviderEmail());
+
             $mailerService->sendCoupon($this->getUser(), $order->getCoupon());
+            $mailerService->sendNotification($notification);
 
             return $this->redirectToRoute('app_order_confirmation', ['id' => $order->getId()]);
         }
@@ -125,31 +131,33 @@ class OrderController extends AbstractController
         $manager->persist($order);
         $manager->flush();
 
-        if ($order->getIsActive()) {
-            $referrer = $order->getCreator()->getInviting();
-            if ($referrer) {
-                $point = (new ReferrerPoint())
-                    ->setClient($order->getCreator())
-                    ->setPoint(15)
-                    ->setDate(new DateTime())
-                    ->setType(ReferrerPointType::INFLOW);
-                $manager->persist($point);
-                $manager->flush();
-
-                $referrer->addPoint($point);
-                $manager->persist($referrer);
-                $manager->flush();
-            }
-
-            if ($order->getPaymentNotification()) {
-                $notification = (new Notification())
-                    ->setText("Twój kupon {$order->getCoupon()} został aktywowany. Możesz teraz założyć aplikacje!")
-                    ->setTitle('Potwierdzenie zamówienia')
-                    ->addUser($this->getUser());
-
-                $service->sendNotification($notification);
-            }
+        if (!$order->getIsActive()) {
+            return $this->redirectToRoute('app_admin_order_list');
         }
+
+        if ($referrer = $order->getCreator()->getInviting()) {
+            $point = (new ReferrerPoint())
+                ->setClient($order->getCreator())
+                ->setPoint(15)
+                ->setDate(new DateTime())
+                ->setType(ReferrerPointType::INFLOW);
+            $manager->persist($point);
+            $manager->flush();
+
+            $referrer->addPoint($point);
+            $manager->persist($referrer);
+            $manager->flush();
+        }
+
+        if ($order->getPaymentNotification()) {
+            $notification = (new Notification())
+                ->setText("Twój kupon {$order->getCoupon()} został aktywowany. Możesz teraz założyć aplikacje!")
+                ->setTitle('Potwierdzenie zamówienia')
+                ->addUser($order->getCreator());
+
+            $service->sendNotification($notification);
+        }
+
 
         return $this->redirectToRoute('app_admin_order_list');
     }

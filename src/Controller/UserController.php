@@ -170,7 +170,7 @@ class UserController extends AbstractController
     public function userList(UserRepository $repository): Response
     {
         return $this->render('dashboard/page/admin/user/list.html.twig', [
-            'users' => $repository->findAll(),
+            'users' => $repository->findBy(['removed' => false], ['isActive' => 'DESC', 'roles' => 'DESC', 'email' => 'ASC']),
         ]);
     }
 
@@ -182,6 +182,21 @@ class UserController extends AbstractController
         return $this->render('dashboard/page/admin/user/profile.html.twig', [
             'user' => $user,
         ]);
+    }
+
+    /**
+     * @Route("/admin/user/delete/{id}", name="app_admin_user_delete")
+     */
+    public function userDelete(User $user, EntityManagerInterface $manager): Response
+    {
+        $user
+            ->setEmail(date('YmdHis') . $user->getEmail() . '-archived')
+            ->setRemoved();
+
+        $manager->persist($user);
+        $manager->flush();
+
+        return $this->redirectToRoute('app_admin_user_list');
     }
 
     /**

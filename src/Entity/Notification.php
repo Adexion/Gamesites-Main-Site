@@ -46,6 +46,8 @@ class Notification
      */
     private $datetime;
 
+    private ?array $rawMail = [];
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
@@ -128,6 +130,20 @@ class Notification
     public function setDatetime(\DateTimeInterface $datetime): self
     {
         $this->datetime = $datetime;
+
+        return $this;
+    }
+
+    public function getRawMailList(): array
+    {
+        return $this->rawMail;
+    }
+
+    public function addRawMail(?string $mail): self
+    {
+        if (!$mail) {
+            $this->rawMail[] = $mail;
+        }
 
         return $this;
     }

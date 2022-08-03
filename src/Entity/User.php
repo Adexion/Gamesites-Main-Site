@@ -113,6 +113,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $referrerPoints;
 
+    /**
+     * @ORM\Column(type="boolean", options={"default": false})
+     */
+    private $removed;
+
     public function __construct()
     {
         $this->application = new ArrayCollection();
@@ -446,6 +451,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $referrerPoint->setClient(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getRemoved(): ?bool
+    {
+        return $this->removed;
+    }
+
+    public function setRemoved(): self
+    {
+        $this->removed = true;
 
         return $this;
     }

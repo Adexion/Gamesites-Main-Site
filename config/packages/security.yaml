@@ -28,8 +28,8 @@ security:
             logout:
                  path: app_logout
             remember_me:
-                secret:   '%kernel.secret%' # required
-                lifetime: 604800 # 1 week in seconds
+                secret: '%kernel.secret%'
+                lifetime: 604800
             switch_user: true
 
     access_control:

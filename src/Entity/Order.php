@@ -114,7 +114,7 @@ class Order
         return $this;
     }
 
-    public function getCreator(): ?User
+    public function getCreator(): ?UserInterface
     {
         return $this->creator;
     }

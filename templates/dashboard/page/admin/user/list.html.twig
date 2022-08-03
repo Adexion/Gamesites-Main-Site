@@ -28,13 +28,14 @@
     {% for user in users %}
         <tr>
             <td>{{ loop.index }}</td>
-            <td>{{ user.email }}</td>
+            <td>{% if (user.registrationDate | date) < ('-1 motnth' | date) and user.isActive == false %}<span class="text-danger">{{ user.email }}</span>{% else %}{{ user.email }}{% endif %}</td>
             <td>
               {{ "ROLE_ADMIN" in user.roles ? "Administrator": "Użytkownik" }}
             </td>
             <td>{{ user.isActive ? "Aktywne" : "Nie aktywne" }}</td>
             <td>
-                <a href="{{ path('app_admin_user_details', {'id': user.id}) }}" class="link-success me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Przejdź do użytkownika"><i class="fas fa-play"></i></a>
+                {% if app.user.email != user.email %}<a href="{{ path('app_admin_user_delete', {'id': user.id}) }}" class="link-success me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Usuń użytkownika"><i class="fas fa-trash"></i></a>{% endif %}
+                {% if user.isActive and app.user.email != user.email %}<a href="{{ path('app_admin_user_details', {'id': user.id}) }}" class="link-success me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Przejdź do użytkownika"><i class="fas fa-play"></i></a>{% endif %}
                 {% if user.isActive and app.user.email != user.email %}<a href="{{ path('app_application_list', {'_switch_user': user.email}) }}" class="link-success me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Przełącz użytkownika"><i class="fas fa-user"></i></a>{% endif %}
             </td>
         </tr>

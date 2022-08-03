@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Notification;
 use App\Entity\User;
+use App\Repository\UserRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\BaseType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
@@ -24,6 +25,13 @@ class NotificationType extends BaseType
             ->add('isEmail', CheckboxType::class, ['required' => false])
             ->add('users', EntityType::class, [
                 'class' => User::class,
+                'query_builder' => function (UserRepository $er) {
+                    return $er->createQueryBuilder('u')
+                        ->where('u.removed = false')
+                        ->orderBy('u.isActive', 'DESC')
+                        ->orderBy('u.roles', 'DESC')
+                        ->orderBy('u.email', 'ASC');
+                },
                 'choice_label' => 'userIdentifier',
                 'multiple' => true,
                 'expanded' => false,
