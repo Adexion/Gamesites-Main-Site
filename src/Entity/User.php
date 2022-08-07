@@ -125,6 +125,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->workspace = new ArrayCollection();
         $this->tickets = new ArrayCollection();
         $this->referrerPoints = new ArrayCollection();
+        $this->removed = false;
     }
 
     public function getId(): ?int
