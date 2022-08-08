@@ -170,7 +170,7 @@ class UserController extends AbstractController
     public function userList(UserRepository $repository): Response
     {
         return $this->render('dashboard/page/admin/user/list.html.twig', [
-            'users' => $repository->findBy(['removed' => false], ['isActive' => 'DESC', 'roles' => 'DESC', 'registrationDate' => 'ASC', 'email' => 'ASC']),
+            'users' => $repository->findBy(['removed' => false], ['isActive' => 'DESC', 'roles' => 'DESC', 'registrationDate' => 'DESC', 'email' => 'ASC']),
         ]);
     }
 
