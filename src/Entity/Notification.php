@@ -141,7 +141,7 @@ class Notification
 
     public function addRawMail(?string $mail): self
     {
-        if (!$mail) {
+        if ($mail) {
             $this->rawMail[] = $mail;
         }
 

@@ -7,13 +7,13 @@
             <li class="nav-item">
                 <a class="nav-link {% if app.request.get('_route') == 'app_application_list' %}active{% endif %}"
                    aria-current="page" href="{{ path('app_application_list') }}">
-                    <i class="fas fa-desktop feather"></i>
+                    <i class="fas fa-globe feather"></i>
                     Aplikacje
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ path('app_workspace_list') }}">
-                    <i class="fas fa-space-shuttle feather"></i>
+                    <i class="fas fa-file-alt feather"></i>
                     Obszary robocze
                 </a>
             </li>
@@ -26,7 +26,7 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{{ path('app_ticket_list') }}">
-                    <i class="fas fa-phone feather"></i>
+                    <i class="fas fa-bug feather"></i>
                     Zgłoszenia
                 </a>
             </li>
@@ -39,8 +39,8 @@
             <ul class="nav flex-column mb-2">
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('app_admin_order_list') }}">
-                        <i class="fas fa-shopping-basket feather"></i>
-                        Zamówienia
+                        <i class="fas fa-shopping-cart feather"></i>
+                        Lista Zamówień
                     </a>
                 </li>
                 <li class="nav-item">
@@ -52,7 +52,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ path('app_admin_notification_list') }}">
                         <i class="fas fa-bell feather"></i>
-                        Powiadomienia
+                        Lista Powiadomienia
                     </a>
                 </li>
                 <li class="nav-item">

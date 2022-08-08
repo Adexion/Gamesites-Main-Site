@@ -3,7 +3,6 @@
 namespace App\Service;
 
 use App\Entity\Notification;
-use App\Entity\Order;
 use App\Entity\User;
 use App\Entity\Workspace;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
@@ -64,7 +63,6 @@ class MailerService
 
         $this->mailer->send($email);
     }
-
 
     public function sendNotification(Notification $notification)
     {

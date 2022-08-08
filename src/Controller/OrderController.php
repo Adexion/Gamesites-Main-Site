@@ -67,7 +67,7 @@ class OrderController extends AbstractController
         Request $request,
         RandomCouponGenerator $couponGenerator,
         EntityManagerInterface $entityManager,
-        MailerService $mailerService
+        MailerService $service
     ): Response {
         if (!$this->getUser()->getAddress()) {
             $this->addFlash('error', 'Dane adresowe są wymagany w celu złożenia zamówienia.');
@@ -89,10 +89,10 @@ class OrderController extends AbstractController
             $notification = (new Notification())
                 ->setText('Nowe zamówienie w systemie')
                 ->setTitle("Użytkownik {$this->getUser()->getEmail()} utworzył nowe zamówienie o numerze - {$order->getCoupon()}")
-                ->addRawMail($mailerService->getProviderEmail());
+                ->addRawMail($service->getProviderEmail());
 
-            $mailerService->sendCoupon($this->getUser(), $order->getCoupon());
-            $mailerService->sendNotification($notification);
+            $service->sendCoupon($this->getUser(), $order->getCoupon());
+            $service->sendNotification($notification);
 
             return $this->redirectToRoute('app_order_confirmation', ['id' => $order->getId()]);
         }

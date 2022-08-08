@@ -19,6 +19,7 @@
             <th scope="col">#</th>
             <th scope="col">Email</th>
             <th scope="col">Rola</th>
+            <th scope="col">Data rejestracji</th>
             <th scope="col">Status konta</th>
             <th scope="col">Akcje</th>
         </tr>
@@ -28,10 +29,11 @@
     {% for user in users %}
         <tr>
             <td>{{ loop.index }}</td>
-            <td>{% if (user.registrationDate | date) < ('-1 motnth' | date) and user.isActive == false %}<span class="text-danger">{{ user.email }}</span>{% else %}{{ user.email }}{% endif %}</td>
+            <td>{% if (user.registrationDate | date) > ('-1 motnth' | date) and user.isActive == false %}<span class="text-danger">{{ user.email }}</span>{% else %}{{ user.email }}{% endif %}</td>
             <td>
               {{ "ROLE_ADMIN" in user.roles ? "Administrator": "Użytkownik" }}
             </td>
+            <td>{{ user.registrationDate | date('d.m.Y') }}</td>
             <td>{{ user.isActive ? "Aktywne" : "Nie aktywne" }}</td>
             <td>
                 {% if app.user.email != user.email %}<a href="{{ path('app_admin_user_delete', {'id': user.id}) }}" class="link-success me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Usuń użytkownika"><i class="fas fa-trash"></i></a>{% endif %}
