@@ -5,6 +5,7 @@ namespace App\Service;
 use App\Entity\Notification;
 use App\Entity\User;
 use App\Entity\Workspace;
+use App\Repository\UserRepository;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
@@ -19,9 +20,12 @@ class MailerService
      */
     private string $mail;
 
-    public function __construct(MailerInterface $mailer, ParameterBagInterface $parameterBag)
+    private UserRepository $repository;
+
+    public function __construct(MailerInterface $mailer, ParameterBagInterface $parameterBag, UserRepository $repository)
     {
         $this->mailer = $mailer;
+        $this->repository =$repository;
         $this->mail = $parameterBag->get('mail');
     }
 
@@ -61,6 +65,8 @@ class MailerService
             ->htmlTemplate("security/email/coupon.html.twig")
             ->context(['user' => $user, 'coupon' => $coupon]);
 
+        $this->addAdmins($email);
+
         $this->mailer->send($email);
     }
 
@@ -76,11 +82,21 @@ class MailerService
             ->htmlTemplate("security/email/notification.html.twig")
             ->context(['notification' => $notification->getText()]);
 
+        $this->addAdmins($email);
+
         $this->mailer->send($email);
     }
 
     public function getProviderEmail(): ?string
     {
         return $this->mail;
+    }
+
+    private function addAdmins(TemplatedEmail $email)
+    {
+        $admins = $this->repository->findBy(['roles' => ["ROLE_USER", "ROLE_ADMIN"]]);
+        foreach ($admins as $admin) {
+            $email->addBcc($admin->getEmail());
+        }
     }
 }
