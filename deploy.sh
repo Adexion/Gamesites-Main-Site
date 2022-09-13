@@ -4,3 +4,4 @@ fi
 
 php bin/console doctrine:schema:update --force
 yarn build
+php bin/console cache:clear
